@@ -136,6 +136,8 @@ public:
     */
     std::string printMosaic();
 
+    std::string printMosaicByRow(int players);
+
     /**
      * Updates the 2D array used for printing with the appropriate colour representation for
      * tiles in the array.

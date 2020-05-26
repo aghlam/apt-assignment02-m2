@@ -776,6 +776,32 @@ std::string Mosaic::printMosaic() {
     return mosaicString;
 }
 
+std::string Mosaic::printMosaicByRow(int row) {
+
+    std::string mosaicString = "";
+
+    std::string rowComplete = getColourArrayRow(row);
+
+    if (row == 1) {
+        mosaicString = STORAGE1 + getStorage1(true) + " " + BARRIER + " " + rowComplete;
+
+    } else if (row == 2) {
+        mosaicString = STORAGE2 + getStorage2(true) + BARRIER + " " + rowComplete;
+
+    } else if (row == 3) {
+        mosaicString = STORAGE3 + getStorage3(true) + BARRIER + " " + rowComplete;
+
+    } else if (row == 4) {
+        mosaicString = STORAGE4 + getStorage4(true) + BARRIER + " " + rowComplete;
+        
+    } else if (row == 5) {
+        mosaicString = STORAGE5 + getStorage5(true) + BARRIER + " " + rowComplete;
+    }
+
+    return mosaicString;
+}
+
+
 std::string Mosaic::getColourArrayRow(int row) {
 
     std::string colourRow = "";

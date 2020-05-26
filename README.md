@@ -25,5 +25,6 @@ ctrl + D
 
 ### Minor Enhancements
 - Make tiles show their colour but leave mosaic colourless lowercase because its easier to identify what has been moved
+- Print both mosaics side-by-side to see what opponents have
 
 ### Major Enhancements

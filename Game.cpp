@@ -328,9 +328,17 @@ void Game::playTurn(Player* player) {
     cout << "4: " << factory4->printFactoryToBoard() << endl;
     cout << "5: " << factory5->printFactoryToBoard() << endl;
     cout << std::endl;
-    cout << "Mosaic for: " << player->getName() << endl;
-    cout << player->getMosaic()->printMosaic();
-    cout << player->getFloor()->printFloor() << endl;
+    // Print player mosaic boards
+    // cout << "Mosaic for: " << player->getName() << endl;
+    // cout << player->getMosaic()->printMosaic();
+    // cout << player->getFloor()->printFloor() << endl;
+
+    if(player1->getTurn()) {
+        printMosaicAll(player1, player2);
+    } else {
+        printMosaicAll(player2, player1);
+    }
+
     cout << "> turn: ";
 
     // Checks for input - whether it is to save game, turn instructions or exiting game
@@ -463,6 +471,18 @@ void Game::playTurn(Player* player) {
 
         exit(0);
     }
+}
+
+void Game::printMosaicAll(Player* player1, Player* player2) {
+
+    cout << "Current player's mosaic:" << "\t%\t" << player2->getName() << "'s mosaic:" << endl;
+    cout << player1->getMosaic()->printMosaicByRow(1) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(1) << endl;
+    cout << player1->getMosaic()->printMosaicByRow(2) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(2) << endl;
+    cout << player1->getMosaic()->printMosaicByRow(3) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(3) << endl;
+    cout << player1->getMosaic()->printMosaicByRow(4) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(4) << endl;
+    cout << player1->getMosaic()->printMosaicByRow(5) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(5) << endl;
+    cout << player1->getFloor()->printFloor() << "\t\t%\t" << player2->getFloor()->printFloor() << endl;
+
 }
 
 bool Game::checkValidInput(char factorySelection, char colourSelection, char placeLocation, Player* player) {

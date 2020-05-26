@@ -228,6 +228,10 @@ private:
     */
     void printLoadInfo();
 
+
+    void printMosaicAll(Player* player1, Player* player2);
+
+
     // Variables
     // Players and scoring
     Player* player1;
