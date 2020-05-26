@@ -24,5 +24,6 @@ ctrl + D
 ## Enhancements To the Game
 
 ### Minor Enhancements
+- Make tiles show their colour but leave mosaic colourless lowercase because its easier to identify what has been moved
 
 ### Major Enhancements

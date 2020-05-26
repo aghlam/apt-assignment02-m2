@@ -2,12 +2,22 @@
 #ifndef COSC_ASS_TWO_TYPES
 #define COSC_ASS_TWO_TYPES
 
+// Tiles Showing Colour
+#define RED_TRUE            "\u001b[91mR\u001b[0m"
+#define YELLOW_TRUE         "\u001b[93mY\u001b[0m"
+#define DBLUE_TRUE          "\u001b[94mB\u001b[0m"
+#define LBLUE_TRUE          "\u001b[96mL\u001b[0m"
+#define BLACK_TRUE          "\u001b[90mU\u001b[0m"
+#define FIRST_TRUE          "\u001b[97mF\u001b[0m"  
+
 // Colour codes
 #define CRED                'R'
 #define CYELLOW             'Y'
 #define CDARK_BLUE          'B'
 #define CLIGHT_BLUE         'L'
 #define CBLACK              'U'
+
+#define cDARK_BLUE          'b'
 
 // Other tile types
 #define CFIRST_PLAYER       'F'

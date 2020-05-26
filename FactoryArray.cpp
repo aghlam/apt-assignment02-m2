@@ -98,7 +98,7 @@ string FactoryArray::printFactoryToBoard() {
 
     for (int i = 0; i < length; ++i) {
         if (tiles[i] != nullptr) {
-            output += getTile(i)->printTile();
+            output += getTile(i)->printColourTile();
             output += " ";
         }
     }

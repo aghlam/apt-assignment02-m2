@@ -47,3 +47,34 @@ char Tile::printTile() {
 
     return tileOutput;
 }
+
+std::string Tile::printColourTile() {
+
+    std::string tileOutput = "";
+    
+    if (colour == BLACK) {
+        tileOutput = BLACK_TRUE;
+    }
+
+    else if (colour == DARK_BLUE) {
+        tileOutput = DBLUE_TRUE;
+    }
+
+    else if (colour == RED) {
+        tileOutput = RED_TRUE;
+    }
+
+    else if (colour == YELLOW) {
+        tileOutput = YELLOW_TRUE;
+    }
+    
+    else if (colour == LIGHT_BLUE) {
+        tileOutput = LBLUE_TRUE;
+    }
+
+    else if (colour == FIRST_PLAYER) {
+        tileOutput = FIRST_TRUE;
+    }
+
+    return tileOutput;
+}

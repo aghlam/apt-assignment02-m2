@@ -96,7 +96,7 @@ string FactoryVector::printFactoryToBoard(){
 
     for (unsigned int i = 0; i < tiles.size(); ++i){
         if (tiles[i] != nullptr) {
-            output += getTile(i)->printTile();
+            output += getTile(i)->printColourTile();
             output +=  + " ";
         }
     }

@@ -1,6 +1,8 @@
 #ifndef COSC_ASS_TWO_TILE
 #define COSC_ASS_TWO_TILE
 
+#include <string>
+
 #include "Types.h"
 
 
@@ -33,6 +35,9 @@ public:
      * @return char representation of the colour
     */
     char printTile();
+
+
+    std::string printColourTile();
 
 
 private:

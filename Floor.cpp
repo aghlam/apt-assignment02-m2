@@ -162,7 +162,7 @@ std::string Floor::printFloor() {
         if (tiles[i] == nullptr) {
             floor += ".";
         } else {
-            floor += tiles[i]->printTile();
+            floor += tiles[i]->printColourTile();
         }
         floor += " ";
     }

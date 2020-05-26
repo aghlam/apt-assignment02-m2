@@ -608,6 +608,11 @@ std::string Mosaic::getCompletedTiles(bool isSpaced) {
             for (int j = 0; j < COMPLETED_GRID_SIZE; j++) {
                 if (completedGrid[i][j] != nullptr && std::islower(completedString[counter])) {
                     completedString[counter] = std::toupper(completedString[counter]);
+
+                    if (completedString[counter] == 'r') {
+                        // completedString[counter] = \u001b[91mR\u001b[0m;
+                    }
+
                 }
 
                 counter += 2;
@@ -636,6 +641,8 @@ std::string Mosaic::getStorage1(bool isSpaced) {
     if(storage1 == nullptr) {
         storage1Str += NO_TILE;
 
+    } else if (isSpaced) {
+        storage1Str += storage1->printColourTile();
     } else {
         storage1Str += storage1->printTile();
     }
@@ -653,7 +660,7 @@ std::string Mosaic::getStorage2(bool isSpaced) {
                 storage2Str += NO_TILE;
                 storage2Str += " ";
             } else {
-                storage2Str += storage2[i]->printTile();
+                storage2Str += storage2[i]->printColourTile();
                 storage2Str += " ";
             }
         }
@@ -681,7 +688,7 @@ std::string Mosaic::getStorage3(bool isSpaced) {
                 storage3Str += NO_TILE;
                 storage3Str += " ";
             } else {
-                storage3Str += storage3[i]->printTile();
+                storage3Str += storage3[i]->printColourTile();
                 storage3Str += " ";
             }
         }
@@ -709,7 +716,7 @@ std::string Mosaic::getStorage4(bool isSpaced) {
                 storage4Str += NO_TILE;
                 storage4Str += " ";
             } else {
-                storage4Str += storage4[i]->printTile();
+                storage4Str += storage4[i]->printColourTile();
                 storage4Str += " ";
             }
         }
@@ -736,7 +743,7 @@ std::string Mosaic::getStorage5(bool isSpaced) {
                 storage5Str += NO_TILE;
                 storage5Str += " ";
             } else {
-                storage5Str += storage5[i]->printTile();
+                storage5Str += storage5[i]->printColourTile();
                 storage5Str += " ";
             }
         }
