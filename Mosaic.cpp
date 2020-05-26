@@ -30,6 +30,7 @@ Mosaic::Mosaic() {
             completedGrid[i][j] = nullptr;
         }
     }
+    
 }
 
 Mosaic::Mosaic(std::string savedMosaic[]) {
@@ -609,10 +610,6 @@ std::string Mosaic::getCompletedTiles(bool isSpaced) {
                 if (completedGrid[i][j] != nullptr && std::islower(completedString[counter])) {
                     completedString[counter] = std::toupper(completedString[counter]);
 
-                    if (completedString[counter] == 'r') {
-                        // completedString[counter] = \u001b[91mR\u001b[0m;
-                    }
-
                 }
 
                 counter += 2;
@@ -762,15 +759,65 @@ std::string Mosaic::getStorage5(bool isSpaced) {
 
 std::string Mosaic::printMosaic() {
 
-    std::string completedGridStr = getCompletedTiles(true);
+    // std::string completedGridStr = getCompletedTiles(true);
 
-    std::string mosaicString = STORAGE1 + getStorage1(true) + " " + BARRIER + " " + completedGridStr.substr(0,10) + '\n'
-                             + STORAGE2 + getStorage2(true) + BARRIER + " " + completedGridStr.substr(10,10) + '\n'
-                             + STORAGE3 + getStorage3(true) + BARRIER + " " + completedGridStr.substr(20,10) + '\n'
-                             + STORAGE4 + getStorage4(true) + BARRIER + " " + completedGridStr.substr(30,10) + '\n'
-                             + STORAGE5 + getStorage5(true) + BARRIER + " " + completedGridStr.substr(40,10) + '\n';
+    std::string row1 = getColourArrayRow(1);
+    std::string row2 = getColourArrayRow(2);
+    std::string row3 = getColourArrayRow(3);
+    std::string row4 = getColourArrayRow(4);
+    std::string row5 = getColourArrayRow(5);
+
+    std::string mosaicString = STORAGE1 + getStorage1(true) + " " + BARRIER + " " + row1 + '\n'
+                             + STORAGE2 + getStorage2(true) + BARRIER + " " + row2 + '\n'
+                             + STORAGE3 + getStorage3(true) + BARRIER + " " + row3 + '\n'
+                             + STORAGE4 + getStorage4(true) + BARRIER + " " + row4 + '\n'
+                             + STORAGE5 + getStorage5(true) + BARRIER + " " + row5 + '\n';
 
     return mosaicString;
+}
+
+std::string Mosaic::getColourArrayRow(int row) {
+
+    std::string colourRow = "";
+    
+    colourRow += completeColourArray[row-1][0];
+    colourRow += " ";
+    colourRow += completeColourArray[row-1][1];
+    colourRow += " ";
+    colourRow += completeColourArray[row-1][2];
+    colourRow += " ";
+    colourRow += completeColourArray[row-1][3];
+    colourRow += " ";
+    colourRow += completeColourArray[row-1][4];
+    colourRow += " ";
+
+    return colourRow;
+}
+
+void Mosaic::updateColourArray() {
+
+    for (int i = 0; i < COMPLETED_GRID_SIZE; ++i) {
+        for (int j = 0; j < COMPLETED_GRID_SIZE; ++j) {
+            if (completedGrid[i][j] != nullptr) {
+                if (completedGrid[i][j]->printTile() == CRED) {
+                    completeColourArray[i][j] = RED_TRUE;
+
+                } else if (completedGrid[i][j]->printTile() == CYELLOW) {
+                    completeColourArray[i][j] = YELLOW_TRUE;
+
+                } else if (completedGrid[i][j]->printTile() == CLIGHT_BLUE) {
+                    completeColourArray[i][j] = LBLUE_TRUE;
+
+                } else if (completedGrid[i][j]->printTile() == CDARK_BLUE) {
+                    completeColourArray[i][j] = DBLUE_TRUE;
+
+                } else if (completedGrid[i][j]->printTile() == CBLACK) {
+                    completeColourArray[i][j] = BLACK_TRUE;
+                }
+            }
+        }
+    }
+
 }
 
 bool Mosaic::checkWin() {

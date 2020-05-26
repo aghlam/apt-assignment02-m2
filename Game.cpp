@@ -225,6 +225,10 @@ void Game::calculateScores() {
     if (player2->getScore() < 0) {
         player2->setScore(0);
     }
+
+    player1->getMosaic()->updateColourArray();
+    player2->getMosaic()->updateColourArray();
+
 }
 
 void Game::roundSetup() {

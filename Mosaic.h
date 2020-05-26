@@ -136,6 +136,12 @@ public:
     */
     std::string printMosaic();
 
+    /**
+     * Updates the 2D array used for printing with the appropriate colour representation for
+     * tiles in the array.
+    */
+    void updateColourArray();
+
 
 private:
 
@@ -196,6 +202,14 @@ private:
     */
     bool withinBoundaries(int row, int col);
 
+    /**
+     * Returns a string represenation of the input row. This method is able to return the representation
+     * of the row in colour tiles 
+     * @param row int number of the row to return
+     * @return string row of the mosiac
+    */
+    std::string getColourArrayRow(int row);
+
 
     // Variables
     int storage2Length;
@@ -210,6 +224,15 @@ private:
     Tile* storage5[5];
 
     Tile* completedGrid[COMPLETED_GRID_SIZE][COMPLETED_GRID_SIZE];
+
+    // 2D array for printing out colour tiles in Completed side
+    std::string completeColourArray[COMPLETED_GRID_SIZE][COMPLETED_GRID_SIZE] = {
+        {"b", "y", "r", "u", "l"},
+        {"l", "b", "y", "r", "u"},
+        {"u", "l", "b", "y", "r"},
+        {"r", "u", "l", "b", "y"},
+        {"y", "r", "u", "l", "b"},
+    };
 
     //Stores row/col coordinates -> For checkAdjacent/Horizontal/Vertical
     int coordinates[2];
