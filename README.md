@@ -20,3 +20,9 @@ and does require need the .txt extension entered when entering a file name.
 ### Exiting a game
 To exit game at any time during game play, press:  
 ctrl + D
+
+## Enhancements To the Game
+
+### Minor Enhancements
+
+### Major Enhancements
