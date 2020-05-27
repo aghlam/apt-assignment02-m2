@@ -1,9 +1,10 @@
 #include "Game.h"
 
 
-Game::Game(string player1Name, string player2Name, bool seed, int intSeed):
+Game::Game(string player1Name, string player2Name, bool seed, int intSeed, string type):
     seed(seed),
-    intSeed(intSeed)
+    intSeed(intSeed),
+    type(type)
 {
     // Player intialisation
     player1 = new Player(player1Name);
@@ -76,6 +77,9 @@ void Game::start() {
         cout << endl;
         cout << "=== ROUND START! ===" << endl;
 
+        // player1->getMosaic()->updateColourArray(type);
+        // player2->getMosaic()->updateColourArray(type);
+
         // Set up round dependant on new game or loaded game
         if (isNewRound) {
             roundSetup();
@@ -85,6 +89,9 @@ void Game::start() {
 
         bool round = true;
         while (round) {
+
+            player1->getMosaic()->updateColourArray(type);
+            player2->getMosaic()->updateColourArray(type);
             
             // Check player's turn
             if (player1->getTurn()) {
@@ -107,12 +114,12 @@ void Game::start() {
         cout << endl;
         // Print mosaics at end of round
         cout << "Player " << player1->getName() << "'s mosaic at end of round" <<endl;
-        cout << player1->getMosaic()->printMosaic();
-        cout << player1->getFloor()->printFloor() << endl;
+        cout << player1->getMosaic()->printMosaic(type);
+        cout << player1->getFloor()->printFloor(type) << endl;
         cout << endl;
         cout << "Player " << player2->getName() << "'s mosaic at end of round" <<endl;
-        cout << player2->getMosaic()->printMosaic();
-        cout << player2->getFloor()->printFloor() << endl;
+        cout << player2->getMosaic()->printMosaic(type);
+        cout << player2->getFloor()->printFloor(type) << endl;
         cout << endl;
         // Print points scored this round
         cout << "Points scored this round:" << endl;
@@ -226,8 +233,8 @@ void Game::calculateScores() {
         player2->setScore(0);
     }
 
-    player1->getMosaic()->updateColourArray();
-    player2->getMosaic()->updateColourArray();
+    // player1->getMosaic()->updateColourArray();
+    // player2->getMosaic()->updateColourArray();
 
 }
 
@@ -321,12 +328,12 @@ void Game::playTurn(Player* player) {
     cout << "TURN FOR PLAYER: " << player->getName() << endl;
     // Print factories and mosiac
     cout << "Factories:" << std::endl;
-    cout << "0: " << factory0->printFactoryToBoard() << endl;
-    cout << "1: " << factory1->printFactoryToBoard() << endl;
-    cout << "2: " << factory2->printFactoryToBoard() << endl;
-    cout << "3: " << factory3->printFactoryToBoard() << endl;
-    cout << "4: " << factory4->printFactoryToBoard() << endl;
-    cout << "5: " << factory5->printFactoryToBoard() << endl;
+    cout << "0: " << factory0->printFactoryToBoard(type) << endl;
+    cout << "1: " << factory1->printFactoryToBoard(type) << endl;
+    cout << "2: " << factory2->printFactoryToBoard(type) << endl;
+    cout << "3: " << factory3->printFactoryToBoard(type) << endl;
+    cout << "4: " << factory4->printFactoryToBoard(type) << endl;
+    cout << "5: " << factory5->printFactoryToBoard(type) << endl;
     cout << std::endl;
     // Print player mosaic boards
     // cout << "Mosaic for: " << player->getName() << endl;
@@ -366,6 +373,21 @@ void Game::playTurn(Player* player) {
                 cout << "save <filename>" << endl;
                 cout << endl;
 
+            }
+
+        } else if (token == "switch") {
+
+            if (type == "symbols") {
+                type = "letters";
+                cout << endl;
+                cout << "Switching to letters display" << endl;
+                cout << endl;
+                
+            } else {
+                type = "symbols";
+                cout << endl;
+                cout << "Switching to symbols display" << endl;
+                cout << endl;
             }
 
         } else {
@@ -476,12 +498,12 @@ void Game::playTurn(Player* player) {
 void Game::printMosaicAll(Player* player1, Player* player2) {
 
     cout << "Current player's mosaic:" << "\t%\t" << player2->getName() << "'s mosaic:" << endl;
-    cout << player1->getMosaic()->printMosaicByRow(1) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(1) << endl;
-    cout << player1->getMosaic()->printMosaicByRow(2) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(2) << endl;
-    cout << player1->getMosaic()->printMosaicByRow(3) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(3) << endl;
-    cout << player1->getMosaic()->printMosaicByRow(4) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(4) << endl;
-    cout << player1->getMosaic()->printMosaicByRow(5) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(5) << endl;
-    cout << player1->getFloor()->printFloor() << "\t\t%\t" << player2->getFloor()->printFloor() << endl;
+    cout << player1->getMosaic()->printMosaicByRow(1, type) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(1, type) << endl;
+    cout << player1->getMosaic()->printMosaicByRow(2, type) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(2, type) << endl;
+    cout << player1->getMosaic()->printMosaicByRow(3, type) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(3, type) << endl;
+    cout << player1->getMosaic()->printMosaicByRow(4, type) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(4, type) << endl;
+    cout << player1->getMosaic()->printMosaicByRow(5, type) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(5, type) << endl;
+    cout << player1->getFloor()->printFloor(type) << "\t\t%\t" << player2->getFloor()->printFloor(type) << endl;
 
 }
 
@@ -619,22 +641,22 @@ bool Game::saveGame(string filename) {
         outfile << factory5->printFactory() << std::endl;
 
         //P1 Storage
-        outfile << player1->getMosaic()->getStorage1(false) << std::endl;
-        outfile << player1->getMosaic()->getStorage2(false) << std::endl;
-        outfile << player1->getMosaic()->getStorage3(false) << std::endl;
-        outfile << player1->getMosaic()->getStorage4(false) << std::endl;
-        outfile << player1->getMosaic()->getStorage5(false) << std::endl;
+        outfile << player1->getMosaic()->getStorage1(false, type) << std::endl;
+        outfile << player1->getMosaic()->getStorage2(false, type) << std::endl;
+        outfile << player1->getMosaic()->getStorage3(false, type) << std::endl;
+        outfile << player1->getMosaic()->getStorage4(false, type) << std::endl;
+        outfile << player1->getMosaic()->getStorage5(false, type) << std::endl;
         // P1 Floor
         outfile << player1->getFloor()->saveFloor() << std::endl;
         // P1 Mosaic wall
         outfile << player1->getMosaic()->getCompletedTiles(false) << std::endl;
 
         //P2 Mosaic
-        outfile << player2->getMosaic()->getStorage1(false) << std::endl;
-        outfile << player2->getMosaic()->getStorage2(false) << std::endl;
-        outfile << player2->getMosaic()->getStorage3(false) << std::endl;
-        outfile << player2->getMosaic()->getStorage4(false) << std::endl;
-        outfile << player2->getMosaic()->getStorage5(false) << std::endl;
+        outfile << player2->getMosaic()->getStorage1(false, type) << std::endl;
+        outfile << player2->getMosaic()->getStorage2(false, type) << std::endl;
+        outfile << player2->getMosaic()->getStorage3(false, type) << std::endl;
+        outfile << player2->getMosaic()->getStorage4(false, type) << std::endl;
+        outfile << player2->getMosaic()->getStorage5(false, type) << std::endl;
         // P2 Floor
         outfile << player2->getFloor()->saveFloor() << std::endl;
         // P2 Mosaic wall

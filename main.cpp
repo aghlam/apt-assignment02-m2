@@ -35,6 +35,8 @@ void printCredits();
 */
 void printSeedMenu();
 
+std::string promptType();
+
 
 int main(int argc, char** argv) {
 
@@ -146,6 +148,7 @@ void newGame() {
     string player2;
     bool seed = false;
     int seedNo = 0;
+    string type = "letters";
 
     while (running) {
         printSeedMenu();
@@ -188,7 +191,7 @@ void newGame() {
                 // the first getline function inside program
                 cin.ignore();
 
-                Game* game = new Game(player1, player2, seed, seedNo);
+                Game* game = new Game(player1, player2, seed, seedNo, type);
                 game->start();
                 delete game;
 
@@ -196,8 +199,12 @@ void newGame() {
                 running = false;
                 
             } else if (selection == '2') {
+
+                cout << endl;
                 cout << "Game Starting..." << endl;
                 cout << endl;
+
+                type = promptType();
 
                 // Player 1 name entry
                 cout << "Enter a name for player 1" << endl;
@@ -218,7 +225,7 @@ void newGame() {
                 // the first getline function inside program
                 cin.ignore();
 
-                Game* game = new Game(player1, player2, seed, seedNo);
+                Game* game = new Game(player1, player2, seed, seedNo, type);
                 game->start();
                 delete game;
 
@@ -241,6 +248,51 @@ void newGame() {
             exit(0);
         } 
     }
+}
+
+std::string promptType() {
+
+    std::string type = "letters";
+    char input;
+    bool running = true;
+
+    while (running) {
+
+        if(cin.good()) {
+
+            cout << "Select display type" << endl;
+            cout << "1. Letters" << endl;
+            cout << "2. Symbols" << endl;
+            cout << endl;
+            cout << "> ";
+            cin >> input;
+            cout << endl;
+
+            if (input == '1') {
+                type == "letters";
+                running = false;
+
+            } else if (input == '2') {
+                type = "symbols";
+                running = false;
+            
+            } else {
+                cout << endl;
+                cout << "Not a valid selection. Please try again" << endl;
+                cout << endl;
+            }
+
+        } else if (cin.eof()) {
+            running = false;
+            cout << endl;
+            cout << "Goodbye" << endl;
+            cout << endl;
+            exit(0);
+        }
+
+    }
+
+    return type;
 }
 
 void printCredits() {

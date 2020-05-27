@@ -8,7 +8,24 @@
 #define DBLUE_TRUE          "\u001b[94mB\u001b[0m"
 #define LBLUE_TRUE          "\u001b[96mL\u001b[0m"
 #define BLACK_TRUE          "\u001b[90mU\u001b[0m"
-#define FIRST_TRUE          "\u001b[97mF\u001b[0m"  
+#define FIRST_TRUE          "\u001b[97mF\u001b[0m"
+
+// Tiles with colours and symbols
+#define RED_SYMBOL          "\u001b[91m\u03B1\u001b[0m" // alpha
+#define YELLOW_SYMBOL       "\u001b[93m\u0263\u001b[0m" // gamma
+#define DBLUE_SYMBOL        "\u001b[94m\u03B2\u001b[0m" // beta
+#define LBLUE_SYMBOL        "\u001b[96m\u03BB\u001b[0m" // lambda
+#define BLACK_SYMBOL        "\u001b[90m\u03BC\u001b[0m" // mu
+#define FIRST_SYMBOL        "\u001b[97mF\u001b[0m"
+
+// Tiles with colours and chinese symbols
+#define RED_CHINESE          "\u001b[91m\u2F8E\u001b[0m"
+#define YELLOW_CHINESE       "\u001b[93m\u2FC8\u001b[0m"
+#define DBLUE_CHINESE        "\u001b[94m\u2FA6\u001b[0m"
+#define LBLUE_CHINESE        "\u001b[96m\u2FAD\u001b[0m"
+#define BLACK_CHINESE        "\u001b[90m\u2FCA\u001b[0m"
+#define FIRST_CHINESE        "\u001b[97mF\u001b[0m"
+
 
 // Colour codes
 #define CRED                'R'

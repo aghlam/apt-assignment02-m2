@@ -154,7 +154,7 @@ void Floor::clear() {
     emptyIndex = 0;
 }
 
-std::string Floor::printFloor() {
+std::string Floor::printFloor(std::string type) {
 
     std::string floor = "broken: ";
 
@@ -162,7 +162,7 @@ std::string Floor::printFloor() {
         if (tiles[i] == nullptr) {
             floor += ".";
         } else {
-            floor += tiles[i]->printColourTile();
+            floor += tiles[i]->printColourTile(type);
         }
         floor += " ";
     }

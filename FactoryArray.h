@@ -53,7 +53,7 @@ public:
      * For printing the factory to game board. Includes spaces in between each tile
      * @return string of tiles with spaces in array
     */
-    string printFactoryToBoard();
+    string printFactoryToBoard(std::string type);
 
     /**
      * Used to draw the tiles from factory whether it is to put on player's mosaic

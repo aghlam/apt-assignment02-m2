@@ -54,7 +54,7 @@ public:
      * For printing the factory to game board. Includes spaces in between each tile
      * @return string of tiles with spaces in array
     */
-    string printFactoryToBoard();
+    string printFactoryToBoard(std::string type);
 
     /**
      * Draws F tile if it is still undrawn and also tiles selected by player. It does

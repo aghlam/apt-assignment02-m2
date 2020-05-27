@@ -30,7 +30,7 @@ public:
      * @param seed bool of whether a seed is used
      * @param intSeed int number of seed used
     */
-    Game(string player1Name, string player2Name, bool seed, int intSeed);
+    Game(string player1Name, string player2Name, bool seed, int intSeed, string type);
 
     /**
      * Constructor for starting a game with a save file. Does not initialise any 
@@ -264,6 +264,7 @@ private:
     // misc
     string filename;
     bool isNewRound;
+    string type;
 
 
 };

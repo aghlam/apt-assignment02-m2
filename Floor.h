@@ -62,7 +62,7 @@ public:
      * Prints the tiles to the game board with '.' representing no tiles
      * @return string of tiles in floor array
     */
-    std::string printFloor();
+    std::string printFloor(std::string type);
 
     /**
      * For saving game, does not print empty tiles

@@ -37,7 +37,7 @@ public:
     char printTile();
 
 
-    std::string printColourTile();
+    std::string printColourTile(std::string type);
 
 
 private:

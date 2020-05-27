@@ -620,18 +620,18 @@ std::string Mosaic::getCompletedTiles(bool isSpaced) {
     return completedString;
 }
 
-std::string Mosaic::getAllStorage() {
+std::string Mosaic::getAllStorage(std::string type) {
 
-    std::string storageString = getStorage1(false) + '\n'
-                              + getStorage2(false) + '\n'
-                              + getStorage3(false) + '\n'
-                              + getStorage4(false) + '\n'
-                              + getStorage5(false);
+    std::string storageString = getStorage1(false, type) + '\n'
+                              + getStorage2(false, type) + '\n'
+                              + getStorage3(false, type) + '\n'
+                              + getStorage4(false, type) + '\n'
+                              + getStorage5(false, type);
 
     return storageString;
 }
 
-std::string Mosaic::getStorage1(bool isSpaced) {
+std::string Mosaic::getStorage1(bool isSpaced, std::string type) {
 
     std::string storage1Str = "";
 
@@ -639,7 +639,7 @@ std::string Mosaic::getStorage1(bool isSpaced) {
         storage1Str += NO_TILE;
 
     } else if (isSpaced) {
-        storage1Str += storage1->printColourTile();
+        storage1Str += storage1->printColourTile(type);
     } else {
         storage1Str += storage1->printTile();
     }
@@ -647,7 +647,7 @@ std::string Mosaic::getStorage1(bool isSpaced) {
     return storage1Str;
 }
 
-std::string Mosaic::getStorage2(bool isSpaced) {
+std::string Mosaic::getStorage2(bool isSpaced, std::string type) {
 
     std::string storage2Str = "";
 
@@ -657,7 +657,7 @@ std::string Mosaic::getStorage2(bool isSpaced) {
                 storage2Str += NO_TILE;
                 storage2Str += " ";
             } else {
-                storage2Str += storage2[i]->printColourTile();
+                storage2Str += storage2[i]->printColourTile(type);
                 storage2Str += " ";
             }
         }
@@ -675,7 +675,7 @@ std::string Mosaic::getStorage2(bool isSpaced) {
     return storage2Str;
 }
 
-std::string Mosaic::getStorage3(bool isSpaced) {
+std::string Mosaic::getStorage3(bool isSpaced, std::string type) {
 
     std::string storage3Str = "";
 
@@ -685,7 +685,7 @@ std::string Mosaic::getStorage3(bool isSpaced) {
                 storage3Str += NO_TILE;
                 storage3Str += " ";
             } else {
-                storage3Str += storage3[i]->printColourTile();
+                storage3Str += storage3[i]->printColourTile(type);
                 storage3Str += " ";
             }
         }
@@ -703,7 +703,7 @@ std::string Mosaic::getStorage3(bool isSpaced) {
     return storage3Str;
 }
 
-std::string Mosaic::getStorage4(bool isSpaced) {
+std::string Mosaic::getStorage4(bool isSpaced, std::string type) {
 
     std::string storage4Str = "";
 
@@ -713,7 +713,7 @@ std::string Mosaic::getStorage4(bool isSpaced) {
                 storage4Str += NO_TILE;
                 storage4Str += " ";
             } else {
-                storage4Str += storage4[i]->printColourTile();
+                storage4Str += storage4[i]->printColourTile(type);
                 storage4Str += " ";
             }
         }
@@ -730,7 +730,7 @@ std::string Mosaic::getStorage4(bool isSpaced) {
     return storage4Str;
 }
 
-std::string Mosaic::getStorage5(bool isSpaced) {
+std::string Mosaic::getStorage5(bool isSpaced, std::string type) {
 
     std::string storage5Str = "";
 
@@ -740,7 +740,7 @@ std::string Mosaic::getStorage5(bool isSpaced) {
                 storage5Str += NO_TILE;
                 storage5Str += " ";
             } else {
-                storage5Str += storage5[i]->printColourTile();
+                storage5Str += storage5[i]->printColourTile(type);
                 storage5Str += " ";
             }
         }
@@ -757,7 +757,7 @@ std::string Mosaic::getStorage5(bool isSpaced) {
     return storage5Str;
 }
 
-std::string Mosaic::printMosaic() {
+std::string Mosaic::printMosaic(std::string type) {
 
     // std::string completedGridStr = getCompletedTiles(true);
 
@@ -767,35 +767,35 @@ std::string Mosaic::printMosaic() {
     std::string row4 = getColourArrayRow(4);
     std::string row5 = getColourArrayRow(5);
 
-    std::string mosaicString = STORAGE1 + getStorage1(true) + " " + BARRIER + " " + row1 + '\n'
-                             + STORAGE2 + getStorage2(true) + BARRIER + " " + row2 + '\n'
-                             + STORAGE3 + getStorage3(true) + BARRIER + " " + row3 + '\n'
-                             + STORAGE4 + getStorage4(true) + BARRIER + " " + row4 + '\n'
-                             + STORAGE5 + getStorage5(true) + BARRIER + " " + row5 + '\n';
+    std::string mosaicString = STORAGE1 + getStorage1(true, type) + " " + BARRIER + " " + row1 + '\n'
+                             + STORAGE2 + getStorage2(true, type) + BARRIER + " " + row2 + '\n'
+                             + STORAGE3 + getStorage3(true, type) + BARRIER + " " + row3 + '\n'
+                             + STORAGE4 + getStorage4(true, type) + BARRIER + " " + row4 + '\n'
+                             + STORAGE5 + getStorage5(true, type) + BARRIER + " " + row5 + '\n';
 
     return mosaicString;
 }
 
-std::string Mosaic::printMosaicByRow(int row) {
+std::string Mosaic::printMosaicByRow(int row, std::string type) {
 
     std::string mosaicString = "";
 
     std::string rowComplete = getColourArrayRow(row);
 
     if (row == 1) {
-        mosaicString = STORAGE1 + getStorage1(true) + " " + BARRIER + " " + rowComplete;
+        mosaicString = STORAGE1 + getStorage1(true, type) + " " + BARRIER + " " + rowComplete;
 
     } else if (row == 2) {
-        mosaicString = STORAGE2 + getStorage2(true) + BARRIER + " " + rowComplete;
+        mosaicString = STORAGE2 + getStorage2(true, type) + BARRIER + " " + rowComplete;
 
     } else if (row == 3) {
-        mosaicString = STORAGE3 + getStorage3(true) + BARRIER + " " + rowComplete;
+        mosaicString = STORAGE3 + getStorage3(true, type) + BARRIER + " " + rowComplete;
 
     } else if (row == 4) {
-        mosaicString = STORAGE4 + getStorage4(true) + BARRIER + " " + rowComplete;
+        mosaicString = STORAGE4 + getStorage4(true, type) + BARRIER + " " + rowComplete;
         
     } else if (row == 5) {
-        mosaicString = STORAGE5 + getStorage5(true) + BARRIER + " " + rowComplete;
+        mosaicString = STORAGE5 + getStorage5(true, type) + BARRIER + " " + rowComplete;
     }
 
     return mosaicString;
@@ -820,25 +820,51 @@ std::string Mosaic::getColourArrayRow(int row) {
     return colourRow;
 }
 
-void Mosaic::updateColourArray() {
+void Mosaic::updateColourArray(std::string type) {
 
-    for (int i = 0; i < COMPLETED_GRID_SIZE; ++i) {
-        for (int j = 0; j < COMPLETED_GRID_SIZE; ++j) {
-            if (completedGrid[i][j] != nullptr) {
-                if (completedGrid[i][j]->printTile() == CRED) {
-                    completeColourArray[i][j] = RED_TRUE;
+    if (type == "symbols") {
+        for (int i = 0; i < COMPLETED_GRID_SIZE; ++i) {
+            for (int j = 0; j < COMPLETED_GRID_SIZE; ++j) {
+                if (completedGrid[i][j] != nullptr) {
+                    if (completedGrid[i][j]->printTile() == CRED) {
+                        completeColourArray[i][j] = RED_SYMBOL;
 
-                } else if (completedGrid[i][j]->printTile() == CYELLOW) {
-                    completeColourArray[i][j] = YELLOW_TRUE;
+                    } else if (completedGrid[i][j]->printTile() == CYELLOW) {
+                        completeColourArray[i][j] = YELLOW_SYMBOL;
 
-                } else if (completedGrid[i][j]->printTile() == CLIGHT_BLUE) {
-                    completeColourArray[i][j] = LBLUE_TRUE;
+                    } else if (completedGrid[i][j]->printTile() == CLIGHT_BLUE) {
+                        completeColourArray[i][j] = LBLUE_SYMBOL;
 
-                } else if (completedGrid[i][j]->printTile() == CDARK_BLUE) {
-                    completeColourArray[i][j] = DBLUE_TRUE;
+                    } else if (completedGrid[i][j]->printTile() == CDARK_BLUE) {
+                        completeColourArray[i][j] = DBLUE_SYMBOL;
 
-                } else if (completedGrid[i][j]->printTile() == CBLACK) {
-                    completeColourArray[i][j] = BLACK_TRUE;
+                    } else if (completedGrid[i][j]->printTile() == CBLACK) {
+                        completeColourArray[i][j] = BLACK_SYMBOL;
+                    }
+                }
+            }
+        }
+
+    } else {
+
+        for (int i = 0; i < COMPLETED_GRID_SIZE; ++i) {
+            for (int j = 0; j < COMPLETED_GRID_SIZE; ++j) {
+                if (completedGrid[i][j] != nullptr) {
+                    if (completedGrid[i][j]->printTile() == CRED) {
+                        completeColourArray[i][j] = RED_TRUE;
+
+                    } else if (completedGrid[i][j]->printTile() == CYELLOW) {
+                        completeColourArray[i][j] = YELLOW_TRUE;
+
+                    } else if (completedGrid[i][j]->printTile() == CLIGHT_BLUE) {
+                        completeColourArray[i][j] = LBLUE_TRUE;
+
+                    } else if (completedGrid[i][j]->printTile() == CDARK_BLUE) {
+                        completeColourArray[i][j] = DBLUE_TRUE;
+
+                    } else if (completedGrid[i][j]->printTile() == CBLACK) {
+                        completeColourArray[i][j] = BLACK_TRUE;
+                    }
                 }
             }
         }

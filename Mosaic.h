@@ -92,7 +92,7 @@ public:
      * Gives save-file string of the mosaic storage rows
      * @return string of all storage rows in save-file format
     */
-    std::string getAllStorage();
+    std::string getAllStorage(std::string type);
 
     //Gets out either raw version (isSpaced=false) or human-readable version (isSpaced=true) of storage rows.
     /**
@@ -100,49 +100,49 @@ public:
      * @param isSpaced bool; if the resulting string is to have spaces between characters or not
      * @return string of first row storage in save-file or human-readable format
     */
-    std::string getStorage1(bool isSpaced);
+    std::string getStorage1(bool isSpaced, std::string type);
 
     /**
      * Gives human-readable or save-file string of second row storage
      * @param isSpaced bool; if the resulting string is to have spaces between characters or not
      * @return string of second row storage in save-file or human-readable format
     */
-    std::string getStorage2(bool isSpaced);
+    std::string getStorage2(bool isSpaced, std::string type);
 
     /**
      * Gives human-readable or save-file string of third row storage
      * @param isSpaced bool; if the resulting string is to have spaces between characters or not
      * @return string of third row storage in save-file or human-readable format
     */
-    std::string getStorage3(bool isSpaced);
+    std::string getStorage3(bool isSpaced, std::string type);
 
     /**
      * Gives human-readable or save-file string of fourth row storage
      * @param isSpaced bool; if the resulting string is to have spaces between characters or not
      * @return string of fourth row storage in save-file or human-readable format
     */
-    std::string getStorage4(bool isSpaced);
+    std::string getStorage4(bool isSpaced, std::string type);
 
     /**
      * Gives human-readable or save-file string of fifth row storage
      * @param isSpaced bool; if the resulting string is to have spaces between characters or not
      * @return string of fifth row storage in save-file or human-readable format
     */
-    std::string getStorage5(bool isSpaced);
+    std::string getStorage5(bool isSpaced, std::string type);
 
     /**
      * Prints out human-readable format of all storage rows + completed grid for the player
      * @return string of a player's mosaic summary, all in human-readable format
     */
-    std::string printMosaic();
+    std::string printMosaic(std::string type);
 
-    std::string printMosaicByRow(int players);
+    std::string printMosaicByRow(int row, std::string type);
 
     /**
      * Updates the 2D array used for printing with the appropriate colour representation for
      * tiles in the array.
     */
-    void updateColourArray();
+    void updateColourArray(std::string type);
 
 
 private:
@@ -229,11 +229,11 @@ private:
 
     // 2D array for printing out colour tiles in Completed side
     std::string completeColourArray[COMPLETED_GRID_SIZE][COMPLETED_GRID_SIZE] = {
-        {"b", "y", "r", "u", "l"},
-        {"l", "b", "y", "r", "u"},
-        {"u", "l", "b", "y", "r"},
-        {"r", "u", "l", "b", "y"},
-        {"y", "r", "u", "l", "b"},
+        {"B", "Y", "R", "U", "L"},
+        {"L", "B", "Y", "R", "U"},
+        {"U", "L", "B", "Y", "R"},
+        {"R", "U", "L", "B", "Y"},
+        {"Y", "R", "U", "L", "B"},
     };
 
     //Stores row/col coordinates -> For checkAdjacent/Horizontal/Vertical

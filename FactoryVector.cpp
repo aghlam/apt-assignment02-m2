@@ -90,13 +90,13 @@ string FactoryVector::printFactory(){
     return output;
 }
 
-string FactoryVector::printFactoryToBoard(){
+string FactoryVector::printFactoryToBoard(std::string type){
     
     string output = "";
 
     for (unsigned int i = 0; i < tiles.size(); ++i){
         if (tiles[i] != nullptr) {
-            output += getTile(i)->printColourTile();
+            output += getTile(i)->printColourTile(type);
             output +=  + " ";
         }
     }

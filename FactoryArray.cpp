@@ -92,13 +92,13 @@ string FactoryArray::printFactory() {
     return output;
 }
 
-string FactoryArray::printFactoryToBoard() {
+string FactoryArray::printFactoryToBoard(std::string type) {
 
     string output = "";
 
     for (int i = 0; i < length; ++i) {
         if (tiles[i] != nullptr) {
-            output += getTile(i)->printColourTile();
+            output += getTile(i)->printColourTile(type);
             output += " ";
         }
     }
