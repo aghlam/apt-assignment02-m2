@@ -85,11 +85,14 @@ void Game::start() {
             roundSetup();
         } else {
             printLoadInfo();
+
+            cout << "Press ENTER to contine.." << endl;
+            std::cin.get();
         }
 
         bool round = true;
         while (round) {
-
+            // For updating after loading
             player1->getMosaic()->updateColourArray(type);
             player2->getMosaic()->updateColourArray(type);
             
@@ -106,22 +109,27 @@ void Game::start() {
 
         // After round functions
         setFirstTurnPlayer();
-        calculateScores();
+        // calculateScores();
 
         // End of round information printing
         cout << endl;
         cout << "=== ROUND INFO ====" << endl;
         cout << endl;
         // Print mosaics at end of round
-        cout << "Player " << player1->getName() << "'s mosaic at end of round" <<endl;
-        cout << player1->getMosaic()->printMosaic(type);
-        cout << player1->getFloor()->printFloor(type) << endl;
-        cout << endl;
-        cout << "Player " << player2->getName() << "'s mosaic at end of round" <<endl;
-        cout << player2->getMosaic()->printMosaic(type);
-        cout << player2->getFloor()->printFloor(type) << endl;
-        cout << endl;
+        cout << "Player mosaics at end of round (before score calculation):" << endl;
+        printMosaicAll(player1, player2);
+        calculateScores();
+        // cout << "Player " << player1->getName() << "'s mosaic at end of round" <<endl;
+        // cout << player1->getMosaic()->printMosaic(type);
+        // cout << player1->getFloor()->printFloor(type) << endl;
+        // cout << endl;
+        // cout << "Player " << player2->getName() << "'s mosaic at end of round" <<endl;
+        // cout << player2->getMosaic()->printMosaic(type);
+        // cout << player2->getFloor()->printFloor(type) << endl;
+        // cout << endl;
         // Print points scored this round
+        cout << endl;
+        cout << "--- After score calculation ---" << endl;
         cout << "Points scored this round:" << endl;
         cout << "Player " << player1->getName() << ": " << p1RoundScore << endl;
         cout << "Player " << player2->getName() << ": " << p2RoundScore << endl;
@@ -137,12 +145,14 @@ void Game::start() {
             cout << output << endl;
 
         }
-
+        lastRoundInformation = roundInformation;
         roundInformation.clear();
 
         cout << endl;
         cout << "=== END OF ROUND ===" << endl;
-        cout << endl;
+        cout << "Press ENTER to continue.." << endl;
+        // std::cin.ignore();
+        std::cin.get();
 
         isNewRound = true;
 
@@ -181,6 +191,8 @@ void Game::start() {
     cout << endl;
     cout << "Thank you for playing!" << endl;
     cout << "Returning to main menu!" << endl;
+    cout << "Press ENTER to continue.." << endl;
+    std::cin.get();
     cout << endl;
 
 }
@@ -364,16 +376,38 @@ void Game::playTurn(Player* player) {
 
             if (!std::all_of(saveFile.begin(), saveFile.end(), isspace) && !saveFile.empty() && saveFile != "save" && saveGame(saveFile + ".txt")) {
                 cout << endl;
+                cout << "====================" << endl;
+                // cout << endl;
                 cout << "Saving to " << saveFile << ".txt" <<endl;
+                // cout << endl;
+                cout << "====================" << endl;
+                cout << "Press ENTER to continue.." << endl;
+                std::cin.get();
                 cout << endl;
 
             } else {
                 cout << endl;
+                cout << "====================" << endl;
+                // cout << endl;
                 cout << "Could not save. Please try again using command: " << endl;
                 cout << "save <filename>" << endl;
+                // cout << endl;
+                cout << "====================" << endl;
                 cout << endl;
 
             }
+
+        } else if (token == "last") {
+
+            printLastRound();
+
+        } else if (token == "help") {
+
+            printHelp();
+
+        } else if (token == "other") {
+
+            printOther();
 
         } else if (token == "switch") {
 
@@ -467,19 +501,17 @@ void Game::playTurn(Player* player) {
             } else {
 
                 cout << endl;
-                cout << "Invalid input detected. Please try again." << endl;
-                cout << endl;
-                cout << "For gameplay inputs, enter:" << endl;
-                cout << "<factory number> <colour selected> <storage row>" << endl;
-                cout << "To place tile on floor, enter 6 into <storage row>" << endl;
-                cout << endl;
-                cout << "To save game, enter:" << endl;
-                cout << "save <filename>" << endl;
-                cout << endl;
-                cout << "To exit game, press ctrl + D" << endl;
+                cout << "====== MESSAGE ======" << endl;
+                // cout << "- Invalid input detected. Please try again." << endl;
+                // cout << endl;
+                cout << "- For gameplay help, type 'help'" << endl;
+                cout << "- For other inputs, type 'other'" << endl;
+                cout << "=====================" << endl;
                 cout << endl;
                 cout << endl;
+
             }
+
         }
 
     } else if (std::cin.eof()) {
@@ -495,9 +527,79 @@ void Game::playTurn(Player* player) {
     }
 }
 
-void Game::printMosaicAll(Player* player1, Player* player2) {
+void Game::printOther() {
 
-    cout << "Current player's mosaic:" << "\t%\t" << player2->getName() << "'s mosaic:" << endl;
+    cout << endl;
+    cout << "==== Other Inputs ====" << endl;
+    cout << endl;
+    cout << "- To save game, enter: 'save <filename>'" << endl;
+    cout << endl;
+    cout << "- To switch between letters or symbols display, enter 'switch'" << endl;
+    cout << endl;
+    cout << "- To print previous round moves, enter 'last'" << endl;
+    cout << endl;
+    cout << "- To exit game, press ctrl + D" << endl;
+    cout << endl;
+    cout << "=====================" << endl;
+    cout << "Press ENTER to continue.." << endl;
+    cout << endl;
+    // std::cin.ignore();
+    std::cin.get();
+
+}
+
+void Game::printHelp() {
+
+    cout << endl;
+    cout << "== Gameplay Instructions ==" << endl;
+    cout << "- To play game, enter the corresponding factory number, tile colour" << endl; 
+    cout << "  and mosaic row to place tile on, in the following order: " << endl;
+    cout << "  <factory number> <colour selected> <storage row>" << endl;
+    cout << endl;
+    cout << "  For e.g. '1 R 3' means selecting all R tiles of factory 1 and\n  placing them on mosaic row 3" << endl;
+    cout << endl;
+    cout << "- To place tile on floor, enter 6 into <storage row>" << endl;
+    cout << endl;
+    cout << "- Symbol inputs are the same as Letter inputs. That is:" << endl;
+    cout << "  Input R for: " << RED_TRUE << " or " << RED_SYMBOL << endl;
+    cout << "  Input Y for: " << YELLOW_TRUE << " or " << YELLOW_SYMBOL << endl;
+    cout << "  Input L for: " << LBLUE_TRUE << " or " << LBLUE_SYMBOL << endl;
+    cout << "  Input B for: " << DBLUE_TRUE << " or " << DBLUE_SYMBOL << endl;
+    cout << "  Input U for: " << BLACK_TRUE << " or " << BLACK_SYMBOL << endl;
+    cout << "  Input F for: " << FIRST_TRUE << " or " << FIRST_SYMBOL << endl;
+    cout << "===========================" << endl;
+    cout << "Press ENTER to continue.." << endl;
+    cout << endl;
+    std::cin.get();
+
+}
+
+void Game::printLastRound() {
+
+    if(lastRoundInformation.size() == 0) {
+        cout << endl;
+        cout << "====================" << endl;
+        cout << "There was no info saved" << endl;
+        cout << "====================" << endl;
+
+    } else {
+        cout << endl;
+        cout << "== Previous round information ==" << endl;
+        for (string info : lastRoundInformation) {
+            cout << info << endl;
+        }
+        cout << "================================" << endl;
+    }
+
+    cout << "Press ENTER to continue.." << endl;
+    std::cin.get();
+    cout << endl;
+
+}
+
+void Game::printMosaicAll(Player* player1, Player* player2) {
+    printf("%s%-20s%-8s%s%s%s", "Mosiac for: ", player1->getName().c_str(), "%", "Mosaic for: ", player2->getName().c_str(), "\n");
+    // cout << "Current player's mosaic:" << "\t%\t" << player2->getName() << "'s mosaic:" << endl;
     cout << player1->getMosaic()->printMosaicByRow(1, type) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(1, type) << endl;
     cout << player1->getMosaic()->printMosaicByRow(2, type) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(2, type) << endl;
     cout << player1->getMosaic()->printMosaicByRow(3, type) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(3, type) << endl;
@@ -534,22 +636,22 @@ bool Game::checkValidInput(char factorySelection, char colourSelection, char pla
 
                         } else {
                             cout << endl;
-                            cout << "Not a valid mosaic storage location" << endl;
+                            cout << "- Not a valid mosaic storage location" << endl;
                         } // end of if-else for colour selection check
 
                     } else {
                         cout << endl;
-                        cout << "This colour does not exist in factory " << factorySelection << "." << endl;
+                        cout << "- This colour does not exist in factory " << factorySelection << "." << endl;
                     } // end of if-else for colour check in factory
 
             } else {
                 cout << endl;
-                cout << "Not a valid colour selection." << endl;
+                cout << "- Not a valid colour selection." << endl;
             } // end of if-else for colour selection check
 
     } else {
         cout << endl;
-        cout << "Not a valid factory selection." << endl;
+        cout << "- Not a valid selection." << endl;
 
     } // end of if-else for factory selection check
     
@@ -1090,6 +1192,7 @@ void Game::printLoadInfo() {
 
     cout << endl;
     cout << "Loading saved game info.." << endl;
+    cout << endl;
     cout << "Current player Scores:" << endl;
     cout << player1->getName() << ": " << player1->getScore() << endl;
     cout << player2->getName() << ": " << player2->getScore() << endl;
@@ -1101,6 +1204,7 @@ void Game::printLoadInfo() {
         cout << endl;
     } else {
         cout << "Currently " << player2->getName() << "'s turn" << endl;
+        cout << endl;
         cout << "Continuing game.." << endl;
         cout << endl;
     }

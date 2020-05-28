@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <regex>
+#include <cstdio>
 #include <string>
 #include <vector>
 
@@ -231,6 +232,12 @@ private:
 
     void printMosaicAll(Player* player1, Player* player2);
 
+    void printOther();
+    
+    void printHelp();
+
+    void printLastRound();
+
 
     // Variables
     // Players and scoring
@@ -260,6 +267,7 @@ private:
 
     // Vector containing information on player inputs
     vector<string> roundInformation;
+    vector<string> lastRoundInformation;
 
     // misc
     string filename;

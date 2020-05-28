@@ -35,6 +35,8 @@ void printCredits();
 */
 void printSeedMenu();
 
+void printHelpMenu();
+
 std::string promptType();
 
 
@@ -56,8 +58,9 @@ void printMenu() {
                     + "-----------\n"
                     + "1. New Game\n" 
                     + "2. Load Game\n"
-                    + "3. Credits (Show student information)\n"
-                    + "4. Quit\n";
+                    + "3. Game instructions\n"
+                    + "4. Credits (Show student information)\n"
+                    + "5. Quit\n";
 
     cout << menu << endl;
 
@@ -116,9 +119,21 @@ void menuSelection() {
                 delete game;
 
             } else if (selection == '3') {
+
+                printHelpMenu();
+                cout << "Press Enter to continue.." << endl;
+                cin.ignore();
+                cin.get();
+            
+            } else if (selection == '4') {
+
                 printCredits();
 
-            } else if (selection == '4') {
+                cin.ignore();
+                cout << "Press ENTER to continue.." << endl;
+                cin.get();
+
+            } else if (selection == '5') {
                 cout << endl;
                 cout << "Goodbye" << endl;
                 cout << endl;
@@ -161,12 +176,15 @@ void newGame() {
                 seed = true;
 
                 // Seed number entry
+                cout << endl;
                 cout << "Please enter seed number" << endl;
                 cout << "> ";
                 cin >> seedNo;
                 cout << endl;
 
                 cin.clear();
+                // Prompt for display type
+                type = promptType();
 
                 cout << "Game Starting..." << endl;
                 cout << endl;
@@ -175,12 +193,14 @@ void newGame() {
                 cout << "Enter a name for Player 1" << endl;
                 cout << "Note: Player 1 will go first" << endl;
                 cout << "> ";
+                cout << endl;
                 cin >> player1;
                 cout << endl;
 
                 // Player 2 name entry
                 cout << "Enter a name for Player 2" << endl;
                 cout << "> ";
+                cout << endl;
                 cin >> player2;
                 cout << endl;
 
@@ -199,22 +219,24 @@ void newGame() {
                 running = false;
                 
             } else if (selection == '2') {
+                // Prompt for display type
+                type = promptType();
 
                 cout << endl;
                 cout << "Game Starting..." << endl;
                 cout << endl;
 
-                type = promptType();
-
                 // Player 1 name entry
                 cout << "Enter a name for player 1" << endl;
                 cout << "> ";
+                cout << endl;
                 cin >> player1;
                 cout << endl;
 
                 // Player 2 name entry
                 cout << "Enter a name for player 2" << endl;
                 cout << "> ";
+                cout << endl;
                 cin >> player2;
                 cout << endl;
 
@@ -297,7 +319,7 @@ std::string promptType() {
 
 void printCredits() {
 
-    string student1 = string("Name:\t\t") + "Alan Lam\n" + "Student ID:\ts3436174\n" + "Email:\t\ts3436174@student.rmit.edu.au";
+    string student1 = string("Name:\t\t") + "Alan Lam (Author of this milestone #2)\n" + "Student ID:\ts3436174\n" + "Email:\t\ts3436174@student.rmit.edu.au";
     string student2 = string("Name:\t\t") + "Matthew Duong\n" + "Student ID:\ts3784450\n" + "Email:\t\ts3784450@student.rmit.edu.au";
     string student3 = string("Name:\t\t") + "Lee Enders\n" + "Student ID:\ts3659667\n" + "Email:\t\ts3659667@student.rmit.edu.au";
 
@@ -322,3 +344,14 @@ void printSeedMenu() {
 
 }
 
+void printHelpMenu() {
+    cout << endl;
+    cout << "== GAME INSTRUCTIONS ==" << endl;
+    
+
+    cout << "For the official Azul game rules, please refer to:" << endl;
+    cout << "https://www.ultraboardgames.com/azul/game-rules.php" << endl;
+    cout << "=======================" << endl;
+
+
+}
