@@ -207,14 +207,15 @@ void Game::start() {
 
             } else if (player4 != nullptr && player4->getTurn()) {
                 playTurn(player4);
+
             }
 
             round = checkRoundEnd();
         }
 
         // After round functions
+        // Set next player first turn
         setFirstTurnPlayer();
-        // calculateScores();
 
         // End of round information printing
         cout << endl;
@@ -224,66 +225,148 @@ void Game::start() {
         cout << "Player mosaics at end of round (before score calculation):" << endl;
         printMosaicAll(player1, player2, player3, player4);
         calculateScores();
-        cout << endl;
-        cout << "--- After score calculation ---" << endl;
-        cout << "Points scored this round:" << endl;
-        cout << "Player " << player1->getName() << ": " << p1RoundScore << endl;
-        cout << "Player " << player2->getName() << ": " << p2RoundScore << endl;
-        cout << endl;
-        // Print out total player scores
-        cout << "Total scores:" << endl;
-        cout << "Player " << player1->getName() << "'s score: " << player1->getScore() << endl;
-        cout << "Player " << player2->getName() << "'s score: " << player2->getScore() << endl;
-        cout << endl;
-        // Print moves taken in round
-        cout << "< The following turns took place >" << endl;
-        for (string output : roundInformation) {
-            cout << output << endl;
 
-        }
-        lastRoundInformation = roundInformation;
-        roundInformation.clear();
-
-        cout << endl;
-        cout << "=== END OF ROUND ===" << endl;
-        cout << "Press ENTER to continue.." << endl;
-        // std::cin.ignore();
-        std::cin.get();
+        // End round messages
+        endRoundMsg();
 
         isNewRound = true;
 
         // Check for game end
-        finished = (player1->getMosaic()->checkWin() || player2->getMosaic()->checkWin());
+        finished = (player1->getMosaic()->checkWin() || player2->getMosaic()->checkWin() 
+            || (player3 != nullptr && player3->getMosaic()->checkWin()) || (player4 != nullptr && player4->getMosaic()->checkWin()));
 
     }
 
     // End game functions
-    // Add in end game points
+    // Add in end game/bonus points
     player1->addScore(player1->getMosaic()->bonusPoints());
     player2->addScore(player2->getMosaic()->bonusPoints());
+    if (player3 != nullptr) {
+        player3->addScore(player3->getMosaic()->bonusPoints());
+
+    }
+    if (player4 != nullptr) {
+        player4->addScore(player4->getMosaic()->bonusPoints());
+
+    }
+
+    endGameMsg();
+
+}
+
+void Game::endRoundMsg() {
+
+    cout << endl;
+    cout << "--- After score calculation ---" << endl;
+    cout << "Points scored this round:" << endl;
+    cout << "Player " << player1->getName() << ": " << p1RoundScore << endl;
+    cout << "Player " << player2->getName() << ": " << p2RoundScore << endl;
+    if (player3 != nullptr) {
+        cout << "Player " << player3->getName() << ": " << p3RoundScore << endl;
+    }
+    if (player4 != nullptr) {
+        cout << "Player " << player4->getName() << ": " << p4RoundScore << endl;
+    }
+    cout << endl;
+
+    // Print out total player scores
+    cout << "Total scores:" << endl;
+    cout << "Player " << player1->getName() << "'s score: " << player1->getScore() << endl;
+    cout << "Player " << player2->getName() << "'s score: " << player2->getScore() << endl;
+    if (player3 != nullptr) {
+        cout << "Player " << player3->getName() << "'s score: " << player3->getScore() << endl;
+    }
+    if (player4 != nullptr) {
+        cout << "Player " << player4->getName() << "'s score: " << player4->getScore() << endl;
+    }
+    cout << endl;
+
+    // Print moves taken in round
+    cout << "< The following turns took place >" << endl;
+    for (string output : roundInformation) {
+        cout << output << endl;
+
+    }
+    lastRoundInformation = roundInformation;
+    roundInformation.clear();
+
+    cout << endl;
+    cout << "=== END OF ROUND ===" << endl;
+    cout << "Press ENTER to continue.." << endl;
+    std::cin.get();
+
+}
+
+void Game::endGameMsg() {
 
     cout << endl;
     cout << "==== GAME OVER! ====" << endl;
     cout << endl;
 
     // Display winner message
-    if (player1->getScore() > player2->getScore()) {
-        cout << "Player " << player1->getName() << " wins!" << endl;
-        cout << endl;
 
-    } else if (player2->getScore() > player1->getScore()) {
-        cout << "Player " << player2->getName() << " wins!" << endl;
-        cout << endl;
+    if (player4 != nullptr) {
+        if (player1->getScore() > player2->getScore() && player1->getScore() > player3->getScore() && player1->getScore() > player4->getScore()) {
+            cout << "Player " << player1->getName() << " wins!" << endl;
+            cout << endl;
+
+        } else if (player2->getScore() > player1->getScore() && player2->getScore() > player3->getScore() && player2->getScore() > player4->getScore()) {
+            cout << "Player " << player2->getName() << " wins!" << endl;
+            cout << endl;
+
+        } else if (player3->getScore() > player1->getScore() && player3->getScore() > player2->getScore() && player3->getScore() > player4->getScore()) {
+            cout << "Player " << player3->getName() << " wins!" << endl;
+            cout << endl;
+
+        } else if (player4->getScore() > player1->getScore() && player4->getScore() > player2->getScore() && player4->getScore() > player3->getScore()) {
+            cout << "Player " << player4->getName() << " wins!" << endl;
+            cout << endl;
+
+        }
+
+    } else if (player3 != nullptr) {
+        if (player1->getScore() > player2->getScore() && player1->getScore() > player3->getScore()) {
+            cout << "Player " << player1->getName() << " wins!" << endl;
+            cout << endl;
+
+        } else if (player2->getScore() > player1->getScore() && player2->getScore() > player3->getScore()) {
+            cout << "Player " << player2->getName() << " wins!" << endl;
+            cout << endl;
+
+        } else if (player3->getScore() > player1->getScore() && player3->getScore() > player2->getScore()) {
+            cout << "Player " << player3->getName() << " wins!" << endl;
+            cout << endl;
+
+        }
 
     } else {
-        cout << "Draw game!" << endl;
-        cout << endl;
+        if (player1->getScore() > player2->getScore() ) {
+            cout << "Player " << player1->getName() << " wins!" << endl;
+            cout << endl;
+
+        } else if (numPlayers == 2 && player2->getScore() > player1->getScore()) {
+            cout << "Player " << player2->getName() << " wins!" << endl;
+            cout << endl;
+
+        } else {
+            cout << "Draw game!" << endl;
+            cout << endl;
+        }
+
     }
 
-    // End game messages
+
     cout << "Final Scores:" << endl;
     cout << "Player " << player1->getName() << " Score:" << player1->getScore() << endl;
     cout << "Player " << player2->getName() << " Score:" << player2->getScore() << endl;
+    if (player3 != nullptr) {
+        cout << "Player " << player3->getName() << " Score:" << player3->getScore() << endl;
+
+    }
+    if (player4 != nullptr) {
+        cout << "Player " << player4->getName() << " Score:" << player4->getScore() << endl;
+
+    }
     cout << endl;
     cout << "Thank you for playing!" << endl;
     cout << "Returning to main menu!" << endl;
@@ -297,6 +380,12 @@ void Game::calculateScores() {
     // Calculates scores on mosaic and move from storage to completed side
     p1RoundScore = player1->getMosaic()->placeCompleted();
     p2RoundScore = player2->getMosaic()->placeCompleted();
+    if (player3 != nullptr) {
+        p3RoundScore = player3->getMosaic()->placeCompleted();
+    }
+    if (player4 != nullptr) {
+        p4RoundScore = player4->getMosaic()->placeCompleted();
+    }
 
     // P1 remaining tiles added to boxLid
     for (int i = 0; i < player1->getMosaic()->getToLidBox()->getListSize(); ++i) {
@@ -314,24 +403,69 @@ void Game::calculateScores() {
     }
     player2->getMosaic()->clearToBoxLid(); 
 
+    // P3 remaining tiles added to boxLid
+    if (player3 != nullptr) {
+        for (int i = 0; i < player3->getMosaic()->getToLidBox()->getListSize(); ++i) {
+        Tile* tile = new Tile(*player3->getMosaic()->getToLidBox()->getFront());
+        boxLid->addTile(tile);
+
+        }
+        player3->getMosaic()->clearToBoxLid(); 
+    }
+
+    // P4 remaining tiles added to boxLid
+    if (player4 != nullptr) {
+        for (int i = 0; i < player4->getMosaic()->getToLidBox()->getListSize(); ++i) {
+        Tile* tile = new Tile(*player4->getMosaic()->getToLidBox()->getFront());
+        boxLid->addTile(tile);
+
+        }
+        player4->getMosaic()->clearToBoxLid(); 
+    }
+
     // Copy over floor tiles to boxlid
     for (int i = 0; i <FLOOR_SIZE; ++i) {
-        if ((player1->getFloor()->getTile(i) != nullptr) && (player1->getFloor()->getTile(i)->getColour() != FIRST_PLAYER)) {
+        if (player1->getFloor()->getTile(i) != nullptr && player1->getFloor()->getTile(i)->getColour() != FIRST_PLAYER) {
             boxLid->addTile(player1->getFloor()->getTile(i));
         }
 
-        if ((player2->getFloor()->getTile(i) != nullptr) && (player2->getFloor()->getTile(i)->getColour() != FIRST_PLAYER)) {
+        if (player2->getFloor()->getTile(i) != nullptr && player2->getFloor()->getTile(i)->getColour() != FIRST_PLAYER) {
             boxLid->addTile(player2->getFloor()->getTile(i));
+        }
+
+        if (player3 != nullptr && player3->getFloor()->getTile(i) != nullptr && player3->getFloor()->getTile(i)->getColour() != FIRST_PLAYER) {
+            boxLid->addTile(player3->getFloor()->getTile(i));
+        }
+
+        if (player4 != nullptr && player4->getFloor()->getTile(i) != nullptr && player4->getFloor()->getTile(i)->getColour() != FIRST_PLAYER) {
+            boxLid->addTile(player4->getFloor()->getTile(i));
         }
     }
 
     // Minus floor score from player total score and remove floor tiles
     p1RoundScore -= player1->getFloor()->calculateFloorScore();
     p2RoundScore -= player2->getFloor()->calculateFloorScore();
+    if (player3 != nullptr) {
+        p3RoundScore -= player3->getFloor()->calculateFloorScore();
+
+    }
+    if (player4 != nullptr) {
+        p4RoundScore -= player3->getFloor()->calculateFloorScore();
+
+    }
 
     // Add round scores to player total score
     player1->addScore(p1RoundScore);
     player2->addScore(p2RoundScore);
+    if (player3 != nullptr) {
+        player3->addScore(p3RoundScore);
+
+    }
+    if (player4 != nullptr) {
+        player4->addScore(p4RoundScore);
+
+    }
+
 
     if (player1->getScore() < 0) {
         player1->setScore(0);
@@ -341,8 +475,14 @@ void Game::calculateScores() {
         player2->setScore(0);
     }
 
-    // player1->getMosaic()->updateColourArray();
-    // player2->getMosaic()->updateColourArray();
+    if (player3 != nullptr && player3->getScore() < 0) {
+        player3->setScore(0);
+    }
+
+    if (player4 != nullptr && player4->getScore() < 0) {
+        player4->setScore(0);
+    }
+
 
 }
 
@@ -391,22 +531,21 @@ void Game::roundSetup() {
             factory6->addTile(tile);
         }
         factory6->insertionSortFactory();
-    }
-    if (factory7 != nullptr) {
+
         grabFourTiles();
         for (Tile* tile : fourTiles) {
             factory7->addTile(tile);
         }
         factory7->insertionSortFactory();
     }
+
     if (factory8 != nullptr) {
         grabFourTiles();
         for (Tile* tile : fourTiles) {
             factory8->addTile(tile);
         }
         factory8->insertionSortFactory();
-    }
-    if (factory9 != nullptr) {
+
         grabFourTiles();
         for (Tile* tile : fourTiles) {
             factory9->addTile(tile);
@@ -657,6 +796,10 @@ void Game::playTurn(Player* player) {
                 roundChoices.push_back(colourSelection);
                 roundChoices.append(" ");
                 roundChoices.push_back(placeLocation);
+                if (factory00 != nullptr) {
+                    roundChoices.append(" ");
+                    roundChoices.push_back(placeRemaining);
+                }
 
                 // Playing choices for factory0 happen here as the factory is different to the other factories
                 if (factorySelection == 'A' || factorySelection == 'Z') {

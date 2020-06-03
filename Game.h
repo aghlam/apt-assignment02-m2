@@ -244,6 +244,10 @@ private:
 
     bool checkForColour(char factorySelection, char colourSelection);
 
+    void endGameMsg();
+
+    void endRoundMsg();
+
 
     // Variables
     // Players and scoring
