@@ -39,6 +39,10 @@ void printHelpMenu();
 
 std::string promptType();
 
+int promptNumPlayers();
+
+int promptNumFactories();
+
 
 int main(int argc, char** argv) {
 
@@ -120,6 +124,8 @@ void menuSelection() {
 
             } else if (selection == '3') {
 
+                // TODO
+
                 printHelpMenu();
                 cout << "Press Enter to continue.." << endl;
                 cin.ignore();
@@ -159,8 +165,15 @@ void newGame() {
 
     bool running = true;
     char selection;
-    string player1;
-    string player2;
+
+    string player1 = "Player 1";
+    string player2 = "Player 2";
+    string player3 = "Player 3";
+    string player4 = "Player 4";
+
+    int numPlayers = 2;
+    int numFactories = 1;
+
     bool seed = false;
     int seedNo = 0;
     string type = "letters";
@@ -182,36 +195,105 @@ void newGame() {
                 cin >> seedNo;
                 cout << endl;
 
-                cin.clear();
+                // Set number of players
+                numPlayers = promptNumPlayers();
+
+                // Set number of factories
+                numFactories = promptNumFactories();
+
+                // cin.clear();
                 // Prompt for display type
                 type = promptType();
 
+                if (numPlayers == 2) {
+                    // Player 1 name entry
+                    cout << "Enter a name for Player 1" << endl;
+                    cout << "Note: Player 1 will go first" << endl;
+                    cout << "> ";
+                    cout << endl;
+                    cin >> player1;
+                    cout << endl;
+
+                    // Player 2 name entry
+                    cout << "Enter a name for Player 2" << endl;
+                    cout << "> ";
+                    cout << endl;
+                    cin >> player2;
+                    cout << endl;
+
+                    cout << "Let's play!" << endl;
+                    cout << endl;
+                    
+                } else if (numPlayers == 3) {
+
+                    // Player 1 name entry
+                    cout << "Enter a name for Player 1" << endl;
+                    cout << "Note: Player 1 will go first" << endl;
+                    cout << "> ";
+                    cout << endl;
+                    cin >> player1;
+                    cout << endl;
+
+                    // Player 2 name entry
+                    cout << "Enter a name for Player 2" << endl;
+                    cout << "> ";
+                    cout << endl;
+                    cin >> player2;
+                    cout << endl;
+
+                    // Player 3 name entry
+                    cout << "Enter a name for Player 3" << endl;
+                    cout << "> ";
+                    cout << endl;
+                    cin >> player3;
+                    cout << endl;
+
+                    cout << "Let's play!" << endl;
+                    cout << endl;
+
+                } else if (numPlayers == 4) {
+
+                         // Player 1 name entry
+                    cout << "Enter a name for Player 1" << endl;
+                    cout << "Note: Player 1 will go first" << endl;
+                    cout << "> ";
+                    cout << endl;
+                    cin >> player1;
+                    cout << endl;
+
+                    // Player 2 name entry
+                    cout << "Enter a name for Player 2" << endl;
+                    cout << "> ";
+                    cout << endl;
+                    cin >> player2;
+                    cout << endl;
+
+                    // Player 3 name entry
+                    cout << "Enter a name for Player 3" << endl;
+                    cout << "> ";
+                    cout << endl;
+                    cin >> player3;
+                    cout << endl;
+
+                    // Player 4 name entry
+                    cout << "Enter a name for Player 4" << endl;
+                    cout << "> ";
+                    cout << endl;
+                    cin >> player4;
+                    cout << endl;
+
+                    cout << "Let's play!" << endl;
+                    cout << endl;
+                    
+                }
+
                 cout << "Game Starting..." << endl;
                 cout << endl;
-
-                // Player 1 name entry
-                cout << "Enter a name for Player 1" << endl;
-                cout << "Note: Player 1 will go first" << endl;
-                cout << "> ";
-                cout << endl;
-                cin >> player1;
-                cout << endl;
-
-                // Player 2 name entry
-                cout << "Enter a name for Player 2" << endl;
-                cout << "> ";
-                cout << endl;
-                cin >> player2;
-                cout << endl;
-
-                cout << "Let's play!" << endl;
-                cout << endl;
-
                 // Remove the '\n' at the end of cin in preparation in preparation for 
                 // the first getline function inside program
                 cin.ignore();
 
-                Game* game = new Game(player1, player2, seed, seedNo, type);
+                Game* game = new Game(player1, player2, player3, player4, numPlayers, numFactories, seed, seedNo, type);
                 game->start();
                 delete game;
 
@@ -219,35 +301,106 @@ void newGame() {
                 running = false;
                 
             } else if (selection == '2') {
+                
+                // Set number of players
+                numPlayers = promptNumPlayers();
+
+                // Set number of factories
+                numFactories = promptNumFactories();
+
+                // cin.clear();
                 // Prompt for display type
                 type = promptType();
 
-                cout << endl;
+                if (numPlayers == 2) {
+                    // Player 1 name entry
+                    cout << "Enter a name for Player 1" << endl;
+                    cout << "Note: Player 1 will go first" << endl;
+                    cout << "> ";
+                    cout << endl;
+                    cin >> player1;
+                    cout << endl;
+
+                    // Player 2 name entry
+                    cout << "Enter a name for Player 2" << endl;
+                    cout << "> ";
+                    cout << endl;
+                    cin >> player2;
+                    cout << endl;
+
+                    cout << "Let's play!" << endl;
+                    cout << endl;
+                    
+                } else if (numPlayers == 3) {
+
+                    // Player 1 name entry
+                    cout << "Enter a name for Player 1" << endl;
+                    cout << "Note: Player 1 will go first" << endl;
+                    cout << "> ";
+                    cout << endl;
+                    cin >> player1;
+                    cout << endl;
+
+                    // Player 2 name entry
+                    cout << "Enter a name for Player 2" << endl;
+                    cout << "> ";
+                    cout << endl;
+                    cin >> player2;
+                    cout << endl;
+
+                    // Player 3 name entry
+                    cout << "Enter a name for Player 3" << endl;
+                    cout << "> ";
+                    cout << endl;
+                    cin >> player3;
+                    cout << endl;
+
+                    cout << "Let's play!" << endl;
+                    cout << endl;
+
+                } else if (numPlayers == 4) {
+
+                         // Player 1 name entry
+                    cout << "Enter a name for Player 1" << endl;
+                    cout << "Note: Player 1 will go first" << endl;
+                    cout << "> ";
+                    cout << endl;
+                    cin >> player1;
+                    cout << endl;
+
+                    // Player 2 name entry
+                    cout << "Enter a name for Player 2" << endl;
+                    cout << "> ";
+                    cout << endl;
+                    cin >> player2;
+                    cout << endl;
+
+                    // Player 3 name entry
+                    cout << "Enter a name for Player 3" << endl;
+                    cout << "> ";
+                    cout << endl;
+                    cin >> player3;
+                    cout << endl;
+
+                    // Player 4 name entry
+                    cout << "Enter a name for Player 4" << endl;
+                    cout << "> ";
+                    cout << endl;
+                    cin >> player4;
+                    cout << endl;
+
+                    cout << "Let's play!" << endl;
+                    cout << endl;
+                    
+                }
+
                 cout << "Game Starting..." << endl;
                 cout << endl;
-
-                // Player 1 name entry
-                cout << "Enter a name for player 1" << endl;
-                cout << "> ";
-                cout << endl;
-                cin >> player1;
-                cout << endl;
-
-                // Player 2 name entry
-                cout << "Enter a name for player 2" << endl;
-                cout << "> ";
-                cout << endl;
-                cin >> player2;
-                cout << endl;
-
-                cout << "Let's play!" << endl;
-                cout << endl;
-
                 // Remove the '\n' at the end of cin in preparation in preparation for 
                 // the first getline function inside program
                 cin.ignore();
 
-                Game* game = new Game(player1, player2, seed, seedNo, type);
+                Game* game = new Game(player1, player2, player3, player4, numPlayers, numFactories, seed, seedNo, type);
                 game->start();
                 delete game;
 
@@ -315,6 +468,98 @@ std::string promptType() {
     }
 
     return type;
+}
+
+int promptNumPlayers() {
+    int numPlayers = 2;
+    char input;
+    bool running = true;
+
+    while (running) {
+
+        if(cin.good()) {
+
+            cout << "Select number of players" << endl;
+            cout << "1. 2 players" << endl;
+            cout << "2. 3 players" << endl;
+            cout << "3. 4 players" << endl;
+            cout << endl;
+            cout << "> ";
+            cin >> input;
+            cout << endl;
+
+            if (input == '1') {
+                running = false;
+
+            } else if (input == '2') {
+                numPlayers = 3;
+                running = false;
+            
+            } else if(input == '3') {
+                numPlayers = 4;
+                running = false;
+            
+            } else {
+                cout << endl;
+                cout << "Not a valid selection. Please try again" << endl;
+                cout << endl;
+            }
+
+        } else if (cin.eof()) {
+            running = false;
+            cout << endl;
+            cout << "Goodbye" << endl;
+            cout << endl;
+            exit(0);
+        }
+
+    }
+
+    return numPlayers;
+}
+
+int promptNumFactories() {
+
+    int numFactories = 1;
+    char input;
+    bool running = true;
+
+    while (running) {
+
+        if(cin.good()) {
+
+            cout << "Select number of factories" << endl;
+            cout << "1. 1 factories" << endl;
+            cout << "2. 2 factories" << endl;
+            cout << endl;
+            cout << "> ";
+            cin >> input;
+            cout << endl;
+
+            if (input == '1') {
+                running = false;
+
+            } else if (input == '2') {
+                numFactories = 2;
+                running = false;
+
+            } else {
+                cout << endl;
+                cout << "Not a valid selection. Please try again" << endl;
+                cout << endl;
+            }
+
+        } else if (cin.eof()) {
+            running = false;
+            cout << endl;
+            cout << "Goodbye" << endl;
+            cout << endl;
+            exit(0);
+        }
+
+    }
+
+    return numFactories;
 }
 
 void printCredits() {

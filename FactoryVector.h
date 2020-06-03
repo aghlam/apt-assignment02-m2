@@ -79,6 +79,10 @@ public:
     */
     void insertionSortFactory();
 
+    Tile* drawFTile();
+
+    bool findFTile();
+
 
 private:
 

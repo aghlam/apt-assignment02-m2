@@ -1,15 +1,73 @@
 #include "Game.h"
 
 
-Game::Game(string player1Name, string player2Name, bool seed, int intSeed, string type):
+Game::Game(string player1Name, string player2Name, string player3Name, string player4name, int numPlayers, int numFactories, bool seed, int intSeed, string type):
     seed(seed),
     intSeed(intSeed),
+    numPlayers(numPlayers),
+    numFactories(numFactories),
     type(type)
 {
-    // Player intialisation
-    player1 = new Player(player1Name);
-    player2 = new Player(player2Name);
-    player2->setTurn(false);
+    // Player intialisation and factory initialisation according to numPlayers
+    if (numPlayers == 2) {
+        player1 = new Player(player1Name);
+        player2 = new Player(player2Name);
+        player2->setTurn(false);
+
+        player3 = nullptr;
+        player4 = nullptr;
+
+        factory1 = new FactoryArray();
+        factory2 = new FactoryArray();
+        factory3 = new FactoryArray();
+        factory4 = new FactoryArray();
+        factory5 = new FactoryArray();
+        factory6 = nullptr;
+        factory7 = nullptr;
+        factory8 = nullptr;
+        factory9 = nullptr;
+
+    } else if (numPlayers == 3) {
+
+        player1 = new Player(player1Name);
+        player2 = new Player(player2Name);
+        player3 = new Player(player3Name);
+        player2->setTurn(false);
+        player3->setTurn(false);
+
+        player4 = nullptr;
+
+        factory1 = new FactoryArray();
+        factory2 = new FactoryArray();
+        factory3 = new FactoryArray();
+        factory4 = new FactoryArray();
+        factory5 = new FactoryArray();
+        factory6 = new FactoryArray();
+        factory7 = new FactoryArray();
+        factory8 = nullptr;
+        factory9 = nullptr;
+
+    } else if (numPlayers == 4) {
+
+        player1 = new Player(player1Name);
+        player2 = new Player(player2Name);
+        player3 = new Player(player3Name);
+        player4 = new Player(player4name);
+        player2->setTurn(false);
+        player3->setTurn(false);
+        player4->setTurn(false);
+
+        factory1 = new FactoryArray();
+        factory2 = new FactoryArray();
+        factory3 = new FactoryArray();
+        factory4 = new FactoryArray();
+        factory5 = new FactoryArray();
+        factory6 = new FactoryArray();
+        factory7 = new FactoryArray();
+        factory8 = new FactoryArray();
+        factory9 = new FactoryArray();
+        
+    }
 
     // TileBag initialisation
     tileBag = new TileBag();
@@ -17,23 +75,29 @@ Game::Game(string player1Name, string player2Name, bool seed, int intSeed, strin
 
     // Box lid initialisation
     boxLid = new TileBag();
-
-    // Factory initialisations
-    factory1 = new FactoryArray();
-    factory2 = new FactoryArray();
-    factory3 = new FactoryArray();
-    factory4 = new FactoryArray();
-    factory5 = new FactoryArray();
-
+    
     // Center factory initialisation
-    factory0 = new FactoryVector();
-    Tile* tile = new Tile(FIRST_PLAYER);
-    factory0->addTile(tile);
+    if (numFactories == 1) {
+        factory0 = new FactoryVector();
+        Tile* tile = new Tile(FIRST_PLAYER);
+        factory0->addTile(tile);
+
+        factory00 = nullptr;
+
+    } else if (numFactories == 2) {
+        factory0 = new FactoryVector();
+        factory00 = new FactoryVector();
+        Tile* tile = new Tile(FIRST_PLAYER);
+        factory0->addTile(tile);
+
+    }
     
     // Misc
     isNewRound = true;
     p1RoundScore = 0;
     p2RoundScore = 0;
+    p3RoundScore = 0;
+    p4RoundScore = 0;
 
 }
 
@@ -41,22 +105,54 @@ Game::Game() {
     isNewRound = false;
     p1RoundScore = 0;
     p2RoundScore = 0;
+    p3RoundScore = 0;
+    p4RoundScore = 0;
 }
 
 Game::~Game() {
 
     delete player1;
     delete player2;
+    if (player3 != nullptr) {
+        delete player3;
+    }
+    if (player4 != nullptr) {
+        delete player4;
+    }
 
     delete tileBag;
     delete boxLid;
     
     delete factory0;
+    if (factory00 != nullptr) {
+        delete factory00;
+    }
+
     delete factory1;
     delete factory2;
     delete factory3;
     delete factory4;
     delete factory5;
+
+    if (factory6 != nullptr) {
+        delete factory6;
+        factory6 = nullptr;
+    }
+
+    if (factory7 != nullptr) {
+        delete factory7;
+        factory7 = nullptr;
+    }
+
+    if (factory8 != nullptr) {
+        delete factory8;
+        factory8 = nullptr;
+    }
+
+    if (factory9 != nullptr) {
+        delete factory9;
+        factory9 = nullptr;
+    }
 
     for (int i = 0; i < 4; ++i) {
         if (fourTiles[i]!=nullptr) {
@@ -77,9 +173,6 @@ void Game::start() {
         cout << endl;
         cout << "=== ROUND START! ===" << endl;
 
-        // player1->getMosaic()->updateColourArray(type);
-        // player2->getMosaic()->updateColourArray(type);
-
         // Set up round dependant on new game or loaded game
         if (isNewRound) {
             roundSetup();
@@ -95,13 +188,25 @@ void Game::start() {
             // For updating after loading
             player1->getMosaic()->updateColourArray(type);
             player2->getMosaic()->updateColourArray(type);
+            if (player3 != nullptr) {
+                player3->getMosaic()->updateColourArray(type);
+            }
+            if (player4 != nullptr) {
+                player3->getMosaic()->updateColourArray(type);
+            }
             
             // Check player's turn
             if (player1->getTurn()) {
                 playTurn(player1);
 
-            } else {
+            } else if (player2->getTurn()) {
                 playTurn(player2);
+
+            } else if (player3 != nullptr && player3->getTurn()) {
+                playTurn(player3);
+
+            } else if (player4 != nullptr && player4->getTurn()) {
+                playTurn(player4);
             }
 
             round = checkRoundEnd();
@@ -117,17 +222,8 @@ void Game::start() {
         cout << endl;
         // Print mosaics at end of round
         cout << "Player mosaics at end of round (before score calculation):" << endl;
-        printMosaicAll(player1, player2);
+        printMosaicAll(player1, player2, player3, player4);
         calculateScores();
-        // cout << "Player " << player1->getName() << "'s mosaic at end of round" <<endl;
-        // cout << player1->getMosaic()->printMosaic(type);
-        // cout << player1->getFloor()->printFloor(type) << endl;
-        // cout << endl;
-        // cout << "Player " << player2->getName() << "'s mosaic at end of round" <<endl;
-        // cout << player2->getMosaic()->printMosaic(type);
-        // cout << player2->getFloor()->printFloor(type) << endl;
-        // cout << endl;
-        // Print points scored this round
         cout << endl;
         cout << "--- After score calculation ---" << endl;
         cout << "Points scored this round:" << endl;
@@ -252,7 +348,7 @@ void Game::calculateScores() {
 
 void Game::roundSetup() {
     // Replenish tileBag from boxLid if tiles <= 20 in tileBag
-    if (tileBag->getLength() <= 20) {
+    if (tileBag->getLength() <= 30 && boxLid->getLength() != 0) {
         for(int i = 0; i < boxLid->getLength(); ++i) {
             tileBag->addTile(boxLid->drawTile());
         }
@@ -289,6 +385,41 @@ void Game::roundSetup() {
     }
     factory5->insertionSortFactory();
 
+    if (factory6 != nullptr) {
+        grabFourTiles();
+        for (Tile* tile : fourTiles) {
+            factory6->addTile(tile);
+        }
+        factory6->insertionSortFactory();
+    }
+    if (factory7 != nullptr) {
+        grabFourTiles();
+        for (Tile* tile : fourTiles) {
+            factory7->addTile(tile);
+        }
+        factory7->insertionSortFactory();
+    }
+    if (factory8 != nullptr) {
+        grabFourTiles();
+        for (Tile* tile : fourTiles) {
+            factory8->addTile(tile);
+        }
+        factory8->insertionSortFactory();
+    }
+    if (factory9 != nullptr) {
+        grabFourTiles();
+        for (Tile* tile : fourTiles) {
+            factory9->addTile(tile);
+        }
+        factory9->insertionSortFactory();
+    }
+
+    for (Tile* tile : fourTiles) {
+        if (tile != nullptr) {
+            tile = nullptr;
+        }
+    }
+    
 }
 
 void Game::grabFourTiles() {
@@ -304,8 +435,21 @@ bool Game::checkRoundEnd() {
 
     if (factory0->getLength() == 0 && factory1->size() == 0 && factory2->size() == 0 
         && factory3->size() == 0 && factory4->size() == 0 && factory5->size() == 0) {
+
             round = false;
-        }
+    }
+
+    if (factory00 != nullptr && factory00->getLength() != 0) {
+        round = true;
+    }
+
+    if (factory6 != nullptr && factory7 != nullptr && (factory6->size() != 0 || factory7->size() != 0)) {
+        round = true;
+    }
+
+    if (factory8 != nullptr && factory9 != nullptr && (factory8->size() != 0 || factory9->size() != 0)) {
+        round = true;
+    }
 
     return round;
 }
@@ -315,47 +459,106 @@ void Game::setFirstTurnPlayer() {
     if (player1->getFloor()->checkFloorForF()) {
         player1->setTurn(true);
         player2->setTurn(false);
+        if (player3 != nullptr) {
+            player3->setTurn(false);
+        }
+        if (player4 != nullptr) {
+            player4->setTurn(false);
+        }
+
         Tile* tile = player1->getFloor()->getFTile();
         factory0->addTile(tile);
 
-    } else {
+    } else if (player2->getFloor()->checkFloorForF()) {
         player1->setTurn(false);
         player2->setTurn(true);
+
+        if (player3 != nullptr) {
+            player3->setTurn(false);
+        }
+        if (player4 != nullptr) {
+            player4->setTurn(false);
+        }
+
         Tile* tile = player2->getFloor()->getFTile();
+        factory0->addTile(tile);
+
+    } else if (player3 != nullptr && player3->getFloor()->checkFloorForF()) {
+        player1->setTurn(false);
+        player2->setTurn(false);
+        player3->setTurn(true);
+        
+        if (player4 != nullptr) {
+            player4->setTurn(false);
+        }
+
+        Tile* tile = player3->getFloor()->getFTile();
+        factory0->addTile(tile);
+
+
+    } else if (player4 != nullptr && player4->getFloor()->checkFloorForF()) {
+        player1->setTurn(false);
+        player2->setTurn(false);
+        player3->setTurn(false);
+        player3->setTurn(true);
+        
+        Tile* tile = player4->getFloor()->getFTile();
         factory0->addTile(tile);
     }
 }
 
 void Game::playTurn(Player* player) {
 
-    // Sort factory0 before printing
-    factory0->insertionSortFactory();
-
     char factorySelection;
     char colourSelection;
     char placeLocation;
-
+    char placeRemaining = 'A';
     string line = "";
+
+    if (factory00 != nullptr) {
+        placeRemaining = 'N';
+    }
+
+
+    // Sort factory0 before printing
+    factory0->insertionSortFactory();
+    if (factory00 != nullptr) {
+        factory00->insertionSortFactory();
+    }
 
     cout << "TURN FOR PLAYER: " << player->getName() << endl;
     // Print factories and mosiac
     cout << "Factories:" << std::endl;
-    cout << "0: " << factory0->printFactoryToBoard(type) << endl;
+    cout << "A: " << factory0->printFactoryToBoard(type) << endl;
+    if (factory00 != nullptr) {
+        cout << "Z: " << factory00->printFactoryToBoard(type) << endl;
+
+    }
     cout << "1: " << factory1->printFactoryToBoard(type) << endl;
     cout << "2: " << factory2->printFactoryToBoard(type) << endl;
     cout << "3: " << factory3->printFactoryToBoard(type) << endl;
     cout << "4: " << factory4->printFactoryToBoard(type) << endl;
     cout << "5: " << factory5->printFactoryToBoard(type) << endl;
+    if (factory6 != nullptr) {
+        cout << "6: " << factory6->printFactoryToBoard(type) << endl;
+        cout << "7: " << factory7->printFactoryToBoard(type) << endl;
+        
+    }
+    if (factory8 != nullptr) {
+        cout << "8: " << factory8->printFactoryToBoard(type) << endl;
+        cout << "9: " << factory9->printFactoryToBoard(type) << endl;
+        
+    }
     cout << std::endl;
-    // Print player mosaic boards
-    // cout << "Mosaic for: " << player->getName() << endl;
-    // cout << player->getMosaic()->printMosaic();
-    // cout << player->getFloor()->printFloor() << endl;
 
     if(player1->getTurn()) {
-        printMosaicAll(player1, player2);
-    } else {
-        printMosaicAll(player2, player1);
+        printMosaicAll(player1, player2, player3, player4);
+    } else if (player2->getTurn()) {
+        printMosaicAll(player2, player1, player3, player4);
+    } else if (player3 != nullptr && player3->getTurn()) {
+        printMosaicAll(player3, player1, player2, player4);
+    } else if (player4 != nullptr && player4->getTurn()) {
+        printMosaicAll(player4, player1, player2, player3);
     }
 
     cout << "> turn: ";
@@ -425,15 +628,25 @@ void Game::playTurn(Player* player) {
             }
 
         } else {
+
             // Parses input command, removes white space and separates into individual variables
             line.erase(remove_if(line.begin(), line.end(), isspace), line.end());
 
-            factorySelection = line[0];
+            factorySelection = toupper(line[0]);
             colourSelection = toupper(line[1]);
             placeLocation = line[2];
 
+            // Check if possible factory selection
+            if (factory00 != nullptr) {
+                placeRemaining = toupper(line[3]);
+            }
+
+            if (factorySelection == 'A' || factorySelection == 'Z') {
+                placeRemaining = 'A';
+            }
+
             // Check valid input
-            bool validInput = checkValidInput(factorySelection, colourSelection, placeLocation, player);
+            bool validInput = checkValidInput(factorySelection, colourSelection, placeLocation, player, placeRemaining);
 
             if (validInput) {
                 // Storing input
@@ -446,48 +659,51 @@ void Game::playTurn(Player* player) {
                 roundChoices.push_back(placeLocation);
 
                 // Playing choices for factory0 happen here as the factory is different to the other factories
-                if (factorySelection == '0') {
+                if (factorySelection == 'A' || factorySelection == 'Z') {
 
-                    vector<Tile*> selection = factory0->drawTile(colourSelection);
+                    if (factory0->findFTile()) {
+                        player->getFloor()->addToFloor(factory0->drawFTile());
+                        roundChoices.append(" (gets first player token)");
+                    }
 
-                    for (Tile* tile : selection) {
-                        if (tile->getColour() == FIRST_PLAYER) {
-                            player->getFloor()->addToFloor(tile);
-                            roundChoices.append(" (gets first player token)");
-                            
-                        } else if (placeLocation != '6') {
-                            bool placed = player->getMosaic()->placeStorage(((int) placeLocation - 48), tile);
-                            if (!placed) {
-                                bool added = player->getFloor()->addToFloor(tile);
-                                if (!added) {
-                                    boxLid->addTile(tile);
-                                }
-                            }
+                    if (factorySelection == 'A') {
+                        playChoicesCenter(player, factory0, colourSelection, placeLocation);
 
-                        } else {
-                            if (player->getFloor()->isFloorFull()) {
-                                boxLid->addTile(tile);
+                    } else if (factorySelection == 'Z') {
+                        playChoicesCenter(player, factory00, colourSelection, placeLocation);
 
-                            } else {
-                                player->getFloor()->addToFloor(tile);
-                            }
-                        }
                     }
 
                 } else if (factorySelection == '1') {
-                    playChoices(player, factory1, colourSelection, placeLocation);
+                    playChoices(player, factory1, colourSelection, placeLocation, placeRemaining);
 
                 } else if (factorySelection == '2') {
-                    playChoices(player, factory2, colourSelection, placeLocation);
+                    playChoices(player, factory2, colourSelection, placeLocation, placeRemaining);
 
                 } else if (factorySelection == '3') {
-                    playChoices(player, factory3, colourSelection, placeLocation);
+                    playChoices(player, factory3, colourSelection, placeLocation, placeRemaining);
 
                 } else if (factorySelection == '4') {
-                    playChoices(player, factory4, colourSelection, placeLocation);
+                    playChoices(player, factory4, colourSelection, placeLocation, placeRemaining);
 
                 } else if (factorySelection == '5') {
-                    playChoices(player, factory5, colourSelection, placeLocation);
+                    playChoices(player, factory5, colourSelection, placeLocation, placeRemaining);
+
+                } else if (factorySelection == '6') {
+                    playChoices(player, factory6, colourSelection, placeLocation, placeRemaining);
+
+                } else if (factorySelection == '7') {
+                    playChoices(player, factory7, colourSelection, placeLocation, placeRemaining);
+                    
+                } else if (factorySelection == '8') {
+                    playChoices(player, factory8, colourSelection, placeLocation, placeRemaining);
+
+                } else if (factorySelection == '9') {
+                    playChoices(player, factory9, colourSelection, placeLocation, placeRemaining);
+
+                } else {
+                    // delete this
+                    cout << "Check failed" << endl;
                 }
 
                 // Add choices to round information
@@ -527,117 +743,84 @@ void Game::playTurn(Player* player) {
     }
 }
 
-void Game::printOther() {
+void Game::printMosaicAll(Player* player1, Player* player2, Player* player3, Player* player4) {
 
-    cout << endl;
-    cout << "==== Other Inputs ====" << endl;
-    cout << endl;
-    cout << "- To save game, enter: 'save <filename>'" << endl;
-    cout << endl;
-    cout << "- To switch between letters or symbols display, enter 'switch'" << endl;
-    cout << endl;
-    cout << "- To print previous round moves, enter 'last'" << endl;
-    cout << endl;
-    cout << "- To exit game, press ctrl + D" << endl;
-    cout << endl;
-    cout << "=====================" << endl;
-    cout << "Press ENTER to continue.." << endl;
-    cout << endl;
-    // std::cin.ignore();
-    std::cin.get();
+    if (player3 == nullptr && player4 == nullptr) {
+        printf("%s%-20s%-8s%s%s%s", "Mosiac for: ", player1->getName().c_str(), "%", "Mosaic for: ", player2->getName().c_str(), "\n");
+        cout << player1->getMosaic()->printMosaicByRow(1, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(1, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(2, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(2, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(3, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(3, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(4, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(4, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(5, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(5, type) << endl;
+        cout << player1->getFloor()->printFloor(type) << "\t\t%\t" << player2->getFloor()->printFloor(type) << endl;
 
-}
-
-void Game::printHelp() {
-
-    cout << endl;
-    cout << "== Gameplay Instructions ==" << endl;
-    cout << "- To play game, enter the corresponding factory number, tile colour" << endl; 
-    cout << "  and mosaic row to place tile on, in the following order: " << endl;
-    cout << "  <factory number> <colour selected> <storage row>" << endl;
-    cout << endl;
-    cout << "  For e.g. '1 R 3' means selecting all R tiles of factory 1 and\n  placing them on mosaic row 3" << endl;
-    cout << endl;
-    cout << "- To place tile on floor, enter 6 into <storage row>" << endl;
-    cout << endl;
-    cout << "- Symbol inputs are the same as Letter inputs. That is:" << endl;
-    cout << "  Input R for: " << RED_TRUE << " or " << RED_SYMBOL << endl;
-    cout << "  Input Y for: " << YELLOW_TRUE << " or " << YELLOW_SYMBOL << endl;
-    cout << "  Input L for: " << LBLUE_TRUE << " or " << LBLUE_SYMBOL << endl;
-    cout << "  Input B for: " << DBLUE_TRUE << " or " << DBLUE_SYMBOL << endl;
-    cout << "  Input U for: " << BLACK_TRUE << " or " << BLACK_SYMBOL << endl;
-    cout << "  Input F for: " << FIRST_TRUE << " or " << FIRST_SYMBOL << endl;
-    cout << "===========================" << endl;
-    cout << "Press ENTER to continue.." << endl;
-    cout << endl;
-    std::cin.get();
-
-}
-
-void Game::printLastRound() {
-
-    if(lastRoundInformation.size() == 0) {
-        cout << endl;
-        cout << "====================" << endl;
-        cout << "There was no info saved" << endl;
-        cout << "====================" << endl;
+    } else if (player3 != nullptr && player4 == nullptr) {
+        printf("%s%-20s%-8s%s%-20s%-8s%s%s%s", "Mosiac for: ", player1->getName().c_str(), "%", "Mosaic for: ", 
+                player2->getName().c_str(), "%", "Mosaic for: ", player3->getName().c_str(), "\n");
+        cout << player1->getMosaic()->printMosaicByRow(1, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(1, type) 
+             << "\t%\t" << player3->getMosaic()->printMosaicByRow(1, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(2, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(2, type) 
+             << "\t%\t" << player3->getMosaic()->printMosaicByRow(2, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(3, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(3, type) 
+             << "\t%\t" << player3->getMosaic()->printMosaicByRow(3, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(4, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(4, type) 
+             << "\t%\t" << player3->getMosaic()->printMosaicByRow(4, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(5, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(5, type)
+             << "\t%\t" << player3->getMosaic()->printMosaicByRow(5, type) << endl;
+        cout << player1->getFloor()->printFloor(type) << "\t\t%\t" << player2->getFloor()->printFloor(type) << "\t\t%\t" << player3->getFloor()->printFloor(type) << endl;
 
     } else {
-        cout << endl;
-        cout << "== Previous round information ==" << endl;
-        for (string info : lastRoundInformation) {
-            cout << info << endl;
-        }
-        cout << "================================" << endl;
+        printf("%s%-20s%-8s%s%-20s%-8s%s%-20s%-8s%s%s%s", "Mosiac for: ", player1->getName().c_str(), "%", "Mosaic for: ", 
+                player2->getName().c_str(), "%", "Mosaic for: ", player3->getName().c_str(), "%", "Mosaic for: ", player4->getName().c_str(), "\n");
+        cout << player1->getMosaic()->printMosaicByRow(1, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(1, type) 
+             << "\t%\t" << player3->getMosaic()->printMosaicByRow(1, type) << "\t%\t" << player4->getMosaic()->printMosaicByRow(1, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(2, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(2, type)
+             << "\t%\t" << player3->getMosaic()->printMosaicByRow(2, type) << "\t%\t" << player4->getMosaic()->printMosaicByRow(2, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(3, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(3, type)
+             << "\t%\t" << player3->getMosaic()->printMosaicByRow(3, type) << "\t%\t" << player4->getMosaic()->printMosaicByRow(3, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(4, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(4, type)
+             << "\t%\t" << player3->getMosaic()->printMosaicByRow(4, type) << "\t%\t" << player4->getMosaic()->printMosaicByRow(4, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(5, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(5, type)
+             << "\t%\t" << player3->getMosaic()->printMosaicByRow(5, type) << "\t%\t" << player4->getMosaic()->printMosaicByRow(5, type) << endl;
+        cout << player1->getFloor()->printFloor(type) << "\t\t%\t" << player2->getFloor()->printFloor(type) << "\t\t%\t" 
+             << player3->getFloor()->printFloor(type) << "\t\t%\t" << player4->getFloor()->printFloor(type) << endl;
+
     }
 
-    cout << "Press ENTER to continue.." << endl;
-    std::cin.get();
-    cout << endl;
-
 }
 
-void Game::printMosaicAll(Player* player1, Player* player2) {
-    printf("%s%-20s%-8s%s%s%s", "Mosiac for: ", player1->getName().c_str(), "%", "Mosaic for: ", player2->getName().c_str(), "\n");
-    // cout << "Current player's mosaic:" << "\t%\t" << player2->getName() << "'s mosaic:" << endl;
-    cout << player1->getMosaic()->printMosaicByRow(1, type) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(1, type) << endl;
-    cout << player1->getMosaic()->printMosaicByRow(2, type) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(2, type) << endl;
-    cout << player1->getMosaic()->printMosaicByRow(3, type) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(3, type) << endl;
-    cout << player1->getMosaic()->printMosaicByRow(4, type) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(4, type) << endl;
-    cout << player1->getMosaic()->printMosaicByRow(5, type) <<"\t%\t" << player2->getMosaic()->printMosaicByRow(5, type) << endl;
-    cout << player1->getFloor()->printFloor(type) << "\t\t%\t" << player2->getFloor()->printFloor(type) << endl;
-
-}
-
-bool Game::checkValidInput(char factorySelection, char colourSelection, char placeLocation, Player* player) {
+bool Game::checkValidInput(char factorySelection, char colourSelection, char placeLocation, Player* player, char placeRemaining) {
 
     bool validInput = false;
 
-    if (factorySelection == '0' || factorySelection == '1' || factorySelection == '2' 
-        || factorySelection == '3' || factorySelection == '4' || factorySelection == '5') {
+    if (checkFactory(factorySelection)) {
 
             if(colourSelection == CRED  || colourSelection == CYELLOW || colourSelection == CDARK_BLUE 
                 || colourSelection == CLIGHT_BLUE || colourSelection == CBLACK) {
 
-                    if ((factorySelection == '1' && factory1->validateFactory(colourSelection))
-                        || (factorySelection == '2' && factory2->validateFactory(colourSelection))
-                        || (factorySelection == '3' && factory3->validateFactory(colourSelection)) 
-                        || (factorySelection == '4' && factory4->validateFactory(colourSelection))
-                        || (factorySelection == '5' && factory5->validateFactory(colourSelection))
-                        || (factorySelection == '0' && factory0->validateFactory(colourSelection))) { 
+
+                    if (checkForColour(factorySelection, colourSelection)) { 
                     
-                        if (placeLocation == '1' || placeLocation == '2' || placeLocation == '3' 
-                            || placeLocation == '4' || placeLocation == '5') {
+                        if (placeRemaining == 'A' || placeRemaining == 'Z') {
 
-                            validInput = player->getMosaic()->validateStorageMove(colourSelection, placeLocation);
+                            if (placeLocation == '1' || placeLocation == '2' || placeLocation == '3' 
+                                || placeLocation == '4' || placeLocation == '5') {
 
-                        } else if (placeLocation == '6') {
-                            validInput = true;
+                                validInput = player->getMosaic()->validateStorageMove(colourSelection, placeLocation);
+
+                            } else if (placeLocation == '6') {
+                                validInput = true;
+
+                            } else {
+                                cout << endl;
+                                cout << "- Not a valid mosaic storage location" << endl;
+                            } // end of if-else for colour selection check
 
                         } else {
                             cout << endl;
-                            cout << "- Not a valid mosaic storage location" << endl;
-                        } // end of if-else for colour selection check
+                            cout << "- Not a valid factory to place remaining tiles" << endl;
+
+                        }
 
                     } else {
                         cout << endl;
@@ -658,18 +841,80 @@ bool Game::checkValidInput(char factorySelection, char colourSelection, char pla
     return validInput;
 }
 
-void Game::playChoices(Player* player, FactoryArray* factory, char colourSelection, char placeLocation) {
+bool Game::checkForColour(char factorySelection, char colourSelection) {
+
+    bool exists = false;
+
+    if ((factorySelection == '1' && factory1->validateFactory(colourSelection)) || (factorySelection == '2' && factory2->validateFactory(colourSelection))
+        || (factorySelection == '3' && factory3->validateFactory(colourSelection)) || (factorySelection == '4' && factory4->validateFactory(colourSelection)) 
+        || (factorySelection == '5' && factory5->validateFactory(colourSelection)) || (factorySelection == 'A' && factory0->validateFactory(colourSelection))) {
+
+        exists = true;
+    }
+
+    if ((factory6 != nullptr && factorySelection == '6' && factory6->validateFactory(colourSelection)) 
+        || (factory7 != nullptr && factorySelection == '7' && factory7->validateFactory(colourSelection))) {
+
+        exists = true;
+    }
+
+    if ((factory8 != nullptr && factorySelection == '8' && factory8->validateFactory(colourSelection)) 
+        || (factory9 != nullptr && factorySelection == '9' && factory9->validateFactory(colourSelection))) {
+
+        exists = true;
+    }
+
+    if (factory00 != nullptr && factorySelection == 'B'  && factory00->validateFactory(colourSelection)) {
+        exists = true;
+    }
+
+    return exists;
+}
+
+bool Game::checkFactory(char factorySelection) {
+
+    bool valid = false;
+
+    if (factorySelection == 'A' || factorySelection == '1' || factorySelection == '2' 
+        || factorySelection == '3' || factorySelection == '4' || factorySelection == '5') {
+            valid = true;
+    }
+    
+    if (factory00 != nullptr && factorySelection == 'Z') {
+        valid = true;
+    }
+
+    if (factory6 != nullptr && factory7 != nullptr && (factorySelection == '6' || factorySelection == '7')) {
+        valid = true;
+    }
+
+    if (factory8 != nullptr && factory9 != nullptr && (factorySelection == '8' || factorySelection == '9')) {
+        valid = true;
+    }
+
+    return valid;
+}
+
+void Game::playChoices(Player* player, FactoryArray* factory, char colourSelection, char placeLocation, char placeRemaining) {
     
     // Puts tiles for selected and non selected into vectors
     vector<Tile*> selection = factory->drawTile(colourSelection, true);
-    vector<Tile*> toFactory0 = factory->drawTile(colourSelection, false);
+    vector<Tile*> toCenter = factory->drawTile(colourSelection, false);
     factory->clear();
 
-    // Adds non-picked tiles to middle/factory0
-    for (Tile* tile : toFactory0) {
-        factory0->addTile(tile);
+    // Adds non-picked tiles to middle/factoryA/factoryZ
+    if (placeRemaining == 'Z') {
+        for (Tile* tile : toCenter) {
+            factory00->addTile(tile);
+        }
+
+    } else {
+        for (Tile* tile : toCenter) {
+            factory0->addTile(tile);
+        }
+
     }
-    toFactory0.clear();
+    toCenter.clear();
 
     for (Tile* tile : selection) {
         if (placeLocation != '6') {
@@ -696,16 +941,61 @@ void Game::playChoices(Player* player, FactoryArray* factory, char colourSelecti
     selection.clear();
 }
 
+void Game::playChoicesCenter(Player* player, FactoryVector* factory, char colourSelection, char placeLocation) {
+
+    vector<Tile*> selection = factory->drawTile(colourSelection);
+
+    for (Tile* tile : selection) {
+        if (placeLocation != '6') {
+            bool placed = player->getMosaic()->placeStorage(((int) placeLocation - 48), tile);
+            if (!placed) {
+                bool added = player->getFloor()->addToFloor(tile);
+                if (!added) {
+                    boxLid->addTile(tile);
+                }
+            }
+
+        } else {
+            if (player->getFloor()->isFloorFull()) {
+                boxLid->addTile(tile);
+
+            } else {
+                player->getFloor()->addToFloor(tile);
+            }
+        }
+    }
+    
+}
+
 void Game::alternateTurn() {
 
     if (player1->getTurn()) {
         player1->setTurn(false);
         player2->setTurn(true);
 
-    } else {
+    } else if (player2->getTurn()) {
+        if (player3 != nullptr) {
+            player2->setTurn(false);
+            player3->setTurn(true);
+        } else {
+            player2->setTurn(false);
+            player1->setTurn(true);
+        }
+
+    } else if (player3 != nullptr && player3->getTurn()) {
+        if (player4 != nullptr) {
+            player3->setTurn(false);
+            player4->setTurn(true);
+        } else {
+            player3->setTurn(false);
+            player1->setTurn(true);
+        }
+
+    } else if (player4 != nullptr && player4->getTurn()) {
+        player4->setTurn(false);
         player1->setTurn(true);
-        player2->setTurn(false);
     }
+
 }
 
 /*------ Saving and loading functions ------*/
@@ -1188,6 +1478,78 @@ bool Game::checkAllCharsAreNums(string str) {
     return success;
 }
 
+/*------ Printing info functions ------*/
+
+void Game::printOther() {
+
+    cout << endl;
+    cout << "==== Other Inputs ====" << endl;
+    cout << endl;
+    cout << "- To save game, enter: 'save <filename>'" << endl;
+    cout << endl;
+    cout << "- To switch between letters or symbols display, enter 'switch'" << endl;
+    cout << endl;
+    cout << "- To print previous round moves, enter 'last'" << endl;
+    cout << endl;
+    cout << "- To exit game, press ctrl + D" << endl;
+    cout << endl;
+    cout << "=====================" << endl;
+    cout << "Press ENTER to continue.." << endl;
+    cout << endl;
+    // std::cin.ignore();
+    std::cin.get();
+
+}
+
+void Game::printHelp() {
+
+    cout << endl;
+    cout << "== Gameplay Instructions ==" << endl;
+    cout << "- To play game, enter the corresponding factory number, tile colour" << endl; 
+    cout << "  and mosaic row to place tile on, in the following order: " << endl;
+    cout << "  <factory number> <colour selected> <storage row>" << endl;
+    cout << endl;
+    cout << "  For e.g. '1 R 3' means selecting all R tiles of factory 1 and\n  placing them on mosaic row 3" << endl;
+    cout << endl;
+    cout << "- To place tile on floor, enter 6 into <storage row>" << endl;
+    cout << endl;
+    cout << "- Symbol inputs are the same as Letter inputs. That is:" << endl;
+    cout << "  Input R for: " << RED_TRUE << " or " << RED_SYMBOL << endl;
+    cout << "  Input Y for: " << YELLOW_TRUE << " or " << YELLOW_SYMBOL << endl;
+    cout << "  Input L for: " << LBLUE_TRUE << " or " << LBLUE_SYMBOL << endl;
+    cout << "  Input B for: " << DBLUE_TRUE << " or " << DBLUE_SYMBOL << endl;
+    cout << "  Input U for: " << BLACK_TRUE << " or " << BLACK_SYMBOL << endl;
+    cout << "  Input F for: " << FIRST_TRUE << " or " << FIRST_SYMBOL << endl;
+    cout << "===========================" << endl;
+    cout << "Press ENTER to continue.." << endl;
+    cout << endl;
+    std::cin.get();
+
+}
+
+void Game::printLastRound() {
+
+    if(lastRoundInformation.size() == 0) {
+        cout << endl;
+        cout << "====================" << endl;
+        cout << "There was no info saved" << endl;
+        cout << "====================" << endl;
+
+    } else {
+        cout << endl;
+        cout << "== Previous round information ==" << endl;
+        for (string info : lastRoundInformation) {
+            cout << info << endl;
+        }
+        cout << "================================" << endl;
+    }
+
+    cout << "Press ENTER to continue.." << endl;
+    std::cin.get();
+    cout << endl;
+
+}
+
 void Game::printLoadInfo() {
 
     cout << endl;
@@ -1196,14 +1558,31 @@ void Game::printLoadInfo() {
     cout << "Current player Scores:" << endl;
     cout << player1->getName() << ": " << player1->getScore() << endl;
     cout << player2->getName() << ": " << player2->getScore() << endl;
+    if (player3 != nullptr) {
+        cout << player3->getName() << ": " << player3->getScore() << endl;  
+    }
+    if (player4 != nullptr) {
+        cout << player4->getName() << ": " << player4->getScore() << endl;  
+    }
     cout <<  endl;
 
     if (player1->getTurn()) {
         cout << "Currently " << player1->getName() << "'s turn" << endl;
         cout << "Continuing game.." << endl;
         cout << endl;
-    } else {
+    } else if (player2->getTurn()) {
         cout << "Currently " << player2->getName() << "'s turn" << endl;
+        cout << endl;
+        cout << "Continuing game.." << endl;
+        cout << endl;
+    } else  if (player3 != nullptr && player3->getTurn()) {
+        cout << "Currently " << player3->getName() << "'s turn" << endl;
+        cout << endl;
+        cout << "Continuing game.." << endl;
+        cout << endl;
+
+    } else  if (player4 != nullptr && player4->getTurn()) {
+        cout << "Currently " << player4->getName() << "'s turn" << endl;
         cout << endl;
         cout << "Continuing game.." << endl;
         cout << endl;

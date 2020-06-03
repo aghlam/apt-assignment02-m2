@@ -31,7 +31,7 @@ public:
      * @param seed bool of whether a seed is used
      * @param intSeed int number of seed used
     */
-    Game(string player1Name, string player2Name, bool seed, int intSeed, string type);
+    Game(string player1Name, string player2Name, string player3Name, string player4name, int numPlayers, int numFactories, bool seed, int intSeed, string type);
 
     /**
      * Constructor for starting a game with a save file. Does not initialise any 
@@ -122,7 +122,7 @@ private:
      * @param player player taking the turn
      * @return true if inputs pass all validations
     */
-    bool checkValidInput(char factorySelection, char colourSelection, char placeLocation, Player* player);
+    bool checkValidInput(char factorySelection, char colourSelection, char placeLocation, Player* player, char placeRemaining);
     
     /**
      * Enacts the inputs done by player for factories 1-5. Attempts the place the selected tiles 
@@ -133,7 +133,7 @@ private:
      * @param colourSelection char referring to the selected colour
      * @param placeLocation char referring to the location tile is to be placed
     */
-    void playChoices(Player* player, FactoryArray* factory, char colourSelection, char placeLocation);
+    void playChoices(Player* player, FactoryArray* factory, char colourSelection, char placeLocation, char placeRemaining);
     
     /**
      * Checks who took the turn and alternates between the players
@@ -229,8 +229,10 @@ private:
     */
     void printLoadInfo();
 
+    // New functions
+    void playChoicesCenter(Player* player, FactoryVector* factory, char colourSelection, char placeLocation);
 
-    void printMosaicAll(Player* player1, Player* player2);
+    void printMosaicAll(Player* player1, Player* player2, Player* player3, Player* player4);
 
     void printOther();
     
@@ -238,17 +240,32 @@ private:
 
     void printLastRound();
 
+    bool checkFactory(char factorySelection);
+
+    bool checkForColour(char factorySelection, char colourSelection);
+
 
     // Variables
     // Players and scoring
     Player* player1;
     Player* player2;
-    int p1RoundScore;
-    int p2RoundScore;
+    Player* player3;
+    Player* player4;
 
     // Seed variables
     bool seed;
     int intSeed;
+
+    int numPlayers;
+    int numFactories;
+
+    string type;
+
+    int p1RoundScore;
+    int p2RoundScore;
+    int p3RoundScore;
+    int p4RoundScore;
+
 
     // tileBag and boxLid
     TileBag* tileBag;
@@ -256,11 +273,18 @@ private:
 
     // Factories - factory0 is the middle
     FactoryVector* factory0;
+    FactoryVector* factory00;
+
+    //
     FactoryArray* factory1;
     FactoryArray* factory2;
     FactoryArray* factory3;
     FactoryArray* factory4;
     FactoryArray* factory5;
+    FactoryArray* factory6;
+    FactoryArray* factory7;
+    FactoryArray* factory8;
+    FactoryArray* factory9;
 
     // To hold four tiles taken from tileBag
     Tile* fourTiles[4];
@@ -272,7 +296,6 @@ private:
     // misc
     string filename;
     bool isNewRound;
-    string type;
 
 
 };

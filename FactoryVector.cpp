@@ -124,11 +124,10 @@ std::vector<Tile*> FactoryVector::drawTile(char selectedColour) {
     std::vector<Tile*> leftoverTemp;
 
     for(unsigned int i = 0; i < tiles.size(); ++i) {
-        if ((tiles[i] != nullptr && tiles[i]->getColour() == colour) 
-            || (tiles[i] != nullptr && tiles[i]->getColour() == FIRST_PLAYER)) {
+        if ((tiles[i] != nullptr && tiles[i]->getColour() == colour)) {
             drawTemp.push_back(tiles[i]);
             tiles[i] = nullptr;
-        } else {
+        } else if (tiles[i] != nullptr) {
             leftoverTemp.push_back(tiles[i]);
             tiles[i] = nullptr;
         }
@@ -140,6 +139,29 @@ std::vector<Tile*> FactoryVector::drawTile(char selectedColour) {
     }
 
     return drawTemp;
+}
+
+Tile* FactoryVector::drawFTile() {
+
+    Tile* tile = nullptr;
+
+    if (tiles[0]->getColour() == FIRST_PLAYER) {
+        tile = tiles[0];
+        tiles[0] = nullptr;
+    }
+
+    return tile;
+}
+
+bool FactoryVector::findFTile() {
+
+    bool found = false;
+
+    if (tiles[0] != nullptr && tiles[0]->getColour() == FIRST_PLAYER) {
+        found =  true;
+    }
+
+    return found;
 }
 
 bool FactoryVector::validateFactory(char colourSelection) {
