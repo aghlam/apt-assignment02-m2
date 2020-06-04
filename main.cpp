@@ -592,7 +592,35 @@ void printSeedMenu() {
 void printHelpMenu() {
     cout << endl;
     cout << "== GAME INSTRUCTIONS ==" << endl;
-    
+    cout << endl;
+
+    cout << "- Players and Factories:" << endl;
+    cout << "  This version of Azul allows between 2-4 players to play the game." << endl;
+    cout << "  The number of factories available will differ with the number of people playing:" << endl;
+    cout << "  2 players - 5 factories" << endl;
+    cout << "  3 players - 7 factories" << endl;
+    cout << "  4 players - 9 factories" << endl;
+    cout << endl;
+    cout << "- Center factories:" << endl;
+    cout << "  Players can choose to use 1 or 2 center factories during the game." << endl;
+    cout << "  Center factories will be denoted by 'A' and 'Z' with 'A' being the default " << endl;
+    cout << "  center factory in a single factory game." << endl;
+    cout << "  Similarly to a game with 1 center factory, the first player to pick tiles from" << endl;
+    cout << "  a center factory will obtain the First-player Tile." << endl;
+    cout << endl;
+    cout << "- Playing the game:" << endl;
+    cout << "  Each player takes turns selecting tiles from the factories" << endl;
+    cout << "  To play a turn, players will input commands in the following order:" << endl;
+    cout << "  1 center: <factory number> <colour selected> <storage row>" << endl;
+    cout << "  2 centers: <factory number> <colour selected> <storage row> <center factory>" << endl;
+    cout << endl;
+    cout << "  Valid inputs:" << endl;
+    cout << "  <factory number>  : A Z 1 2 3 4 5 6 7 8 9" << endl;
+    cout << "  <colour selected> : R B L U Y" << endl;
+    cout << "  <storage row>     : 1 2 3 4 5" << endl;
+    cout << "  <center factory>  : A Z" << endl;
+    cout << endl;
+    // cout << "" << endl;
 
     cout << "For the official Azul game rules, please refer to:" << endl;
     cout << "https://www.ultraboardgames.com/azul/game-rules.php" << endl;

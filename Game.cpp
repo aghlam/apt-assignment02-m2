@@ -560,6 +560,10 @@ void Game::playTurn(Player* player) {
 
             printHelp();
 
+        } else if (token == "current") {
+
+            printCurrentRound();
+
         } else if (token == "other") {
 
             printOther();
@@ -1969,37 +1973,58 @@ void Game::printOther() {
     cout << endl;
     cout << "- To switch between letters or symbols display, enter 'switch'" << endl;
     cout << endl;
-    cout << "- To print previous round moves, enter 'last'" << endl;
+    cout << "- To view current round moves, enter 'current'" << endl;
+    cout << endl;
+    cout << "- To view previous round moves, enter 'last'" << endl;
     cout << endl;
     cout << "- To exit game, press ctrl + D" << endl;
     cout << endl;
     cout << "=====================" << endl;
     cout << "Press ENTER to continue.." << endl;
     cout << endl;
-    // std::cin.ignore();
     std::cin.get();
 
 }
 
 void Game::printHelp() {
 
-    cout << endl;
-    cout << "== Gameplay Instructions ==" << endl;
-    cout << "- To play game, enter the corresponding factory number, tile colour" << endl; 
-    cout << "  and mosaic row to place tile on, in the following order: " << endl;
-    cout << "  <factory number> <colour selected> <storage row>" << endl;
-    cout << endl;
-    cout << "  For e.g. '1 R 3' means selecting all R tiles of factory 1 and\n  placing them on mosaic row 3" << endl;
-    cout << endl;
-    cout << "- To place tile on floor, enter 6 into <storage row>" << endl;
-    cout << endl;
+    if (numFactories == 2) {
+        cout << endl;
+        cout << "== Gameplay Instructions ==" << endl;
+        cout << endl;
+        cout << "- To play game, enter the corresponding factory number, tile colour," << endl; 
+        cout << "  mosaic row to place tile on and a center factory to place the remaining" << endl;
+        cout << "  tiles in the following order: " << endl;
+        cout << "  <factory number> <colour selected> <storage row> <center factory>" << endl;
+        cout << endl;
+        cout << "  For e.g. '1 R 3 Z' means selecting all R tiles of factory 1 and placing" << endl; 
+        cout << "  them on mosaic row 3 with remaining tiles to center factory Z" << endl;
+        cout << endl;
+        cout << "- To place tile on floor, enter 6 into <storage row>" << endl;
+        cout << endl;
+
+    } else {
+        cout << endl;
+        cout << "== Gameplay Instructions ==" << endl;
+        cout << "- To play game, enter the corresponding factory number, tile colour" << endl; 
+        cout << "  and mosaic row to place tile on, in the following order: " << endl;
+        cout << "  <factory number> <colour selected> <storage row>" << endl;
+        cout << endl;
+        cout << "  For e.g. '1 R 3' means selecting all R tiles of factory 1 and\n  placing them on mosaic row 3" << endl;
+        cout << endl;
+        cout << "- To place tile on floor, enter 6 into <storage row>" << endl;
+        cout << endl;
+
+    }
+
     cout << "- Symbol inputs are the same as Letter inputs. That is:" << endl;
     cout << "  Input R for: " << RED_TRUE << " or " << RED_SYMBOL << endl;
     cout << "  Input Y for: " << YELLOW_TRUE << " or " << YELLOW_SYMBOL << endl;
     cout << "  Input L for: " << LBLUE_TRUE << " or " << LBLUE_SYMBOL << endl;
     cout << "  Input B for: " << DBLUE_TRUE << " or " << DBLUE_SYMBOL << endl;
     cout << "  Input U for: " << BLACK_TRUE << " or " << BLACK_SYMBOL << endl;
-    cout << "  Input F for: " << FIRST_TRUE << " or " << FIRST_SYMBOL << endl;
+    cout << "  The first player tile is rpresented by " << FIRST_TRUE << " or " << FIRST_SYMBOL << endl;
+    cout << endl;
     cout << "===========================" << endl;
     cout << "Press ENTER to continue.." << endl;
     cout << endl;
@@ -2017,7 +2042,7 @@ void Game::printLastRound() {
 
     } else {
         cout << endl;
-        cout << "== Previous round information ==" << endl;
+        cout << "== Previous round moves ==" << endl;
         for (string info : lastRoundInformation) {
             cout << info << endl;
         }
@@ -2028,6 +2053,27 @@ void Game::printLastRound() {
     std::cin.get();
     cout << endl;
 
+}
+
+void Game::printCurrentRound() {
+    if (roundInformation.size() != 0) {
+        cout << endl;
+        cout << "== Current round moves taken ==" << endl;
+        for (string output : roundInformation) {
+            cout << output << endl;
+        }
+        cout << "===============================" << endl;
+
+    } else {
+        cout << endl;
+        cout << "====================" << endl;
+        cout << "No current moves recorded" << endl;
+        cout << "====================" << endl;
+    }
+
+    cout << "Press ENTER to continue.." << endl;
+    std::cin.get();
+    cout << endl;
 }
 
 void Game::printLoadInfo() {
