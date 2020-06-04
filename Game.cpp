@@ -227,7 +227,7 @@ void Game::start() {
         calculateScores();
 
         // End round messages
-        endRoundMsg();
+        printEndRoundMsg();
 
         isNewRound = true;
 
@@ -250,11 +250,11 @@ void Game::start() {
 
     }
 
-    endGameMsg();
+    printEndGameMsg();
 
 }
 
-void Game::endRoundMsg() {
+void Game::printEndRoundMsg() {
 
     cout << endl;
     cout << "--- After score calculation ---" << endl;
@@ -297,7 +297,7 @@ void Game::endRoundMsg() {
 
 }
 
-void Game::endGameMsg() {
+void Game::printEndGameMsg() {
 
     cout << endl;
     cout << "==== GAME OVER! ====" << endl;
@@ -1152,30 +1152,92 @@ bool Game::saveGame(string filename) {
 
         // Seed value
         if (seed == true){
-            outfile << tileBag->getSeed() << std::endl;
+            outfile << tileBag->getSeed() << endl;
 
         } else {
-            outfile << "No seed" << std::endl;
+            outfile << "No seed" << endl;
 
         }
+
+        // Number of players
+        outfile << numPlayers << endl;
+
         // Who's turn
-        outfile << player1->getTurn() << std::endl;
+        if (player1->getTurn()) {
+            outfile << "1" << std::endl;
+        } else if (player2->getTurn()) {
+            outfile << "2" << std::endl;
+        } else if (player3 != nullptr && player3->getTurn()) {
+            outfile << "3" << std::endl;
+        } else if (player4 != nullptr && player4->getTurn()) {
+            outfile << "4" << std::endl;
+        }
         // P1 details
         outfile << player1->getName() << std::endl;
         outfile << player1->getScore() << std::endl;
         // P2 details
         outfile << player2->getName() << std::endl;
         outfile << player2->getScore() << std::endl;
+        // P3 details
+        if (player3 != nullptr) {
+            outfile << player3->getName() << std::endl;
+            outfile << player3->getScore() << std::endl;
+            
+        } else {
+            outfile << endl;
+            outfile << endl;
+        }
+        // P4 details
+        if (player4 != nullptr) {
+            outfile << player4->getName() << std::endl;
+            outfile << player4->getScore() << std::endl;
+            
+        } else {
+            outfile << endl;
+            outfile << endl;
+        }
+        
+        // Number of center factories
+        outfile << numFactories << endl;
 
-        // Factories 0-5
+        // Factories 0-00
         outfile << factory0->printFactory() << std::endl;
+        if (factory00 != nullptr) {
+            outfile << factory00->printFactory() << std::endl;
+
+        } else {
+            outfile << endl;
+
+        }
+
+        // Factories 1-5
         outfile << factory1->printFactory() << std::endl;
         outfile << factory2->printFactory() << std::endl;
         outfile << factory3->printFactory() << std::endl;
         outfile << factory4->printFactory() << std::endl;
         outfile << factory5->printFactory() << std::endl;
+        // Factories 6-7
+        if (factory6 != nullptr) {
+            outfile << factory6->printFactory() << std::endl;
+            outfile << factory7->printFactory() << std::endl;
 
-        //P1 Storage
+        } else {
+            outfile << endl;
+            outfile << endl;
+
+        }
+        // Factories 8-9
+        if (factory8 != nullptr) {
+            outfile << factory8->printFactory() << std::endl;
+            outfile << factory9->printFactory() << std::endl;
+
+        } else {
+            outfile << endl;
+            outfile << endl;
+
+        }
+
+        // P1 Storage
         outfile << player1->getMosaic()->getStorage1(false, type) << std::endl;
         outfile << player1->getMosaic()->getStorage2(false, type) << std::endl;
         outfile << player1->getMosaic()->getStorage3(false, type) << std::endl;
@@ -1186,7 +1248,7 @@ bool Game::saveGame(string filename) {
         // P1 Mosaic wall
         outfile << player1->getMosaic()->getCompletedTiles(false) << std::endl;
 
-        //P2 Mosaic
+        // P2 Mosaic
         outfile << player2->getMosaic()->getStorage1(false, type) << std::endl;
         outfile << player2->getMosaic()->getStorage2(false, type) << std::endl;
         outfile << player2->getMosaic()->getStorage3(false, type) << std::endl;
@@ -1196,6 +1258,46 @@ bool Game::saveGame(string filename) {
         outfile << player2->getFloor()->saveFloor() << std::endl;
         // P2 Mosaic wall
         outfile << player2->getMosaic()->getCompletedTiles(false) << std::endl;
+
+        // P3
+        if (player3 != nullptr) {
+            // P3 Mosaic
+            outfile << player3->getMosaic()->getStorage1(false, type) << std::endl;
+            outfile << player3->getMosaic()->getStorage2(false, type) << std::endl;
+            outfile << player3->getMosaic()->getStorage3(false, type) << std::endl;
+            outfile << player3->getMosaic()->getStorage4(false, type) << std::endl;
+            outfile << player3->getMosaic()->getStorage5(false, type) << std::endl;
+            // P3 Floor
+            outfile << player3->getFloor()->saveFloor() << std::endl;
+            // P3 Mosaic wall
+            outfile << player3->getMosaic()->getCompletedTiles(false) << std::endl;
+
+        } else {
+            for (int i = 0; i < 7; ++i) {
+                outfile << endl;
+            }
+
+        }
+
+        // P4
+        if (player4 != nullptr) {
+            // P4 Mosaic
+            outfile << player4->getMosaic()->getStorage1(false, type) << std::endl;
+            outfile << player4->getMosaic()->getStorage2(false, type) << std::endl;
+            outfile << player4->getMosaic()->getStorage3(false, type) << std::endl;
+            outfile << player4->getMosaic()->getStorage4(false, type) << std::endl;
+            outfile << player4->getMosaic()->getStorage5(false, type) << std::endl;
+            // P4 Floor
+            outfile << player4->getFloor()->saveFloor() << std::endl;
+            // P4 Mosaic wall
+            outfile << player4->getMosaic()->getCompletedTiles(false) << std::endl;
+
+        } else {
+            for (int i = 0; i < 7; ++i) {
+                outfile << endl;
+            }
+
+        }
 
         // boxLid
         for (int i = 0; i < boxLid->getTiles()->getListSize(); ++i) {

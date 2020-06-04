@@ -244,9 +244,9 @@ private:
 
     bool checkForColour(char factorySelection, char colourSelection);
 
-    void endGameMsg();
+    void printEndGameMsg();
 
-    void endRoundMsg();
+    void printEndRoundMsg();
 
 
     // Variables
