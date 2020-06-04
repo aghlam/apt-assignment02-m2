@@ -159,7 +159,7 @@ private:
      * @param str string details of row in factory 1 to/or 5
      * @return true if the row is valid
     */
-    bool validateFactory1to5(string str);
+    bool validateFactory1to9(string str);
 
     /**
      * Validates tileBag details match the correct colours

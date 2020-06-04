@@ -1150,15 +1150,6 @@ bool Game::saveGame(string filename) {
         std::ofstream outfile;
         outfile.open(filename);
 
-        // Seed value
-        if (seed == true){
-            outfile << tileBag->getSeed() << endl;
-
-        } else {
-            outfile << "No seed" << endl;
-
-        }
-
         // Number of players
         outfile << numPlayers << endl;
 
@@ -1196,7 +1187,7 @@ bool Game::saveGame(string filename) {
             outfile << endl;
             outfile << endl;
         }
-        
+
         // Number of center factories
         outfile << numFactories << endl;
 
@@ -1375,16 +1366,9 @@ bool Game::loadGame(string filename) {
 }
 
 void Game::initializeObjectsFromArray(std::string LOADED_GAME_FILE) {
+    
     // Load tileBag
     tileBag = new TileBag(LOADED_TILE_BAG);
-
-    if (LOADED_SEED != "No seed") {
-        seed = true;
-        tileBag->setSeed(std::stoi(LOADED_SEED));
-
-    } else {
-        seed = false;
-    }
 
     // Load player turn
     bool p1turn;
@@ -1424,147 +1408,399 @@ bool Game::validateLoadedArray(std::string LOADED_GAME_FILE) {
 
     bool success = true;
     
-    // Check for seed, either "No seed, blank or an int"
-    if (LOADED_SEED != "No seed") {
-        if (!checkIntRange(LOADED_SEED)) {
-            success = false;
-        }
+    // Check for number of players
+    if (LOADED_NUMPLAYERS != "2" && LOADED_NUMPLAYERS != "3" && LOADED_NUMPLAYERS != "4") {
+        // if (!checkIntRange(LOADED_NUMPLAYERS)) {
+        //     success = false;
+        // }
 
-        if(!checkAllCharsAreNums(LOADED_SEED)){
-            success = false;
-        }
+        // if(!checkAllCharsAreNums(LOADED_NUMPLAYERS)){
+        //     success = false;
+        // }
+        cout << endl;
+        cout << "Invalid number of players" << endl;
+        success = false;
     }
         
     // Player turn validation
-    if (LOADED_TURN != "0" && LOADED_TURN != "1") {
-        cout << "turn order failure" << endl;
+    if (LOADED_TURN != "1" && LOADED_TURN != "2" 
+        && LOADED_TURN != "3" && LOADED_TURN != "4") {
+        cout << endl;
+        cout << "Turn order failure" << endl;
         success = false;
     }
     
     // Player1 name
     if (LOADED_P1_NAME == "") {
+        cout << endl;
+        cout << "P1 empty name" << endl;
         success = false;
     }
 
     // Player1 score
     for (unsigned int i = 0; i < LOADED_P1_SCORE.length(); ++i) {
         if (!checkIntRange(LOADED_P1_SCORE)) {
+            cout << endl;
+            cout << "P1 Score load error - out of range" << endl;
             success = false;
         }
 
         if (!checkAllCharsAreNums(LOADED_P1_SCORE)) {
+            cout << endl;
+            cout << "P1 Score load error - not a number" << endl;
             success = false;
         }
     }
 
     // Player2 name
     if (LOADED_P2_NAME == "") {
+        cout << endl;
+        cout << "P2 empty name" << endl;
         success = false;
     }
 
     // Player2 score
     for (unsigned int i = 0; i < LOADED_P2_SCORE.length(); ++i) {
         if (!checkIntRange(LOADED_P2_SCORE)) {
+            cout << endl;
+            cout << "P2 Score load error - out of range" << endl;
             success = false;
         }
 
         if (!checkAllCharsAreNums(LOADED_P2_SCORE)) {
+            cout << endl;
+            cout << "P2 Score load error - not a number" << endl;
             success = false;
         }
     }
-    // Factories
+
+    // P3 details
+    if (LOADED_NUMPLAYERS == "3" || LOADED_NUMPLAYERS == "4") {
+        // Player4 name
+        if (LOADED_P3_NAME == "") {
+            cout << endl;
+            cout << "P3 empty name" << endl;
+            success = false;
+        }
+
+        // Player3 score
+        for (unsigned int i = 0; i < LOADED_P3_SCORE.length(); ++i) {
+            if (!checkIntRange(LOADED_P3_SCORE)) {
+                cout << endl;
+                cout << "P3 Score load error - out of range" << endl;
+                success = false;
+            }
+
+            if (!checkAllCharsAreNums(LOADED_P3_SCORE)) {
+                cout << endl;
+                cout << "P3 Score load error - not a number" << endl;
+                success = false;
+            }
+        }
+    }
+
+    // P4 details
+    if (LOADED_NUMPLAYERS == "4") {
+        // Player4 name
+        if (LOADED_P4_NAME == "") {
+            cout << endl;
+            cout << "P4 empty name" << endl;
+            success = false;
+        }
+
+        // Player4 score
+        for (unsigned int i = 0; i < LOADED_P4_SCORE.length(); ++i) {
+            if (!checkIntRange(LOADED_P4_SCORE)) {
+                cout << endl;
+                cout << "P4 Score load error - out of range" << endl;
+                success = false;
+            }
+
+            if (!checkAllCharsAreNums(LOADED_P4_SCORE)) {
+                cout << endl;
+                cout << "P4 Score load error - not a number" << endl;
+                success = false;
+            }
+        }
+    }
+
+    // Factories 0-00
+    if (LOADED_NUMFACTORIES != "1" && LOADED_NUMFACTORIES != "2") {
+        cout << endl;
+        cout << "Invalid number of center factories" << endl;
+        success = false;
+    }
+
     if (!validateUpperPlusF(LOADED_FACTORY_0)) {
+        cout << endl;
+        cout << "Invalid factory0" << endl;
         success = false;
     }
 
-    if (!validateFactory1to5(LOADED_FACTORY_1)) {
+    if (LOADED_NUMFACTORIES == "2") {
+        if (!validateUpperPlusF(LOADED_FACTORY_00)) {
+            cout << endl;
+            cout << "Invalid factory00" << endl;
+            success = false;
+        }
+    }
+
+    // Factories 1-9
+    if (!validateFactory1to9(LOADED_FACTORY_1)) {
+        cout << endl;
+        cout << "Invalid factory1" << endl;
         success = false;
     }
 
-    if (!validateFactory1to5(LOADED_FACTORY_2)) {
+    if (!validateFactory1to9(LOADED_FACTORY_2)) {
+        cout << endl;
+        cout << "Invalid factory2" << endl;
         success = false;
     }
 
-    if (!validateFactory1to5(LOADED_FACTORY_3)) {
+    if (!validateFactory1to9(LOADED_FACTORY_3)) {
+        cout << endl;
+        cout << "Invalid factory3" << endl;
         success = false;
     }
 
-    if (!validateFactory1to5(LOADED_FACTORY_4)) {
+    if (!validateFactory1to9(LOADED_FACTORY_4)) {
+        cout << endl;
+        cout << "Invalid factory4" << endl;
         success = false;
     }
 
-    if (!validateFactory1to5(LOADED_FACTORY_5)) {
+    if (!validateFactory1to9(LOADED_FACTORY_5)) {
+        cout << endl;
+        cout << "Invalid factory5" << endl;
         success = false;
     }
-    // Player1 Storage 
+
+    if (LOADED_NUMPLAYERS == "3" || LOADED_NUMPLAYERS == "4") {
+
+        if (!validateFactory1to9(LOADED_FACTORY_6)) {
+            cout << endl;
+            cout << "Invalid factory6" << endl;
+            success = false;
+        }
+
+        if (!validateFactory1to9(LOADED_FACTORY_7)) {
+            cout << endl;
+            cout << "Invalid factory7" << endl;
+            success = false;
+        }
+    }
+
+    if (LOADED_NUMPLAYERS == "4") {
+
+        if (!validateFactory1to9(LOADED_FACTORY_8)) {
+            cout << endl;
+            cout << "Invalid factory8" << endl;
+            success = false;
+        }
+
+        if (!validateFactory1to9(LOADED_FACTORY_9)) {
+            cout << endl;
+            cout << "Invalid factory9" << endl;
+            success = false;
+        }
+    }
+
+    // Player1 walls and mosaic
     if (!validateUpperPlusPeriod(LOADED_P1_WALL_1)) {
+        cout << endl;
+        cout << "Invalid P1 storage row 1" << endl;
         success = false;
     }
 
     if (!validateUpperPlusPeriod(LOADED_P1_WALL_2)) {
+        cout << endl;
+        cout << "Invalid P1 storage row 2" << endl;
         success = false;
     }
 
     if (!validateUpperPlusPeriod(LOADED_P1_WALL_3)) {
+        cout << endl;
+        cout << "Invalid P1 storage row 3" << endl;
         success = false;
     }
 
     if (!validateUpperPlusPeriod(LOADED_P1_WALL_4)) {
+        cout << endl;
+        cout << "Invalid P1 storage row 4" << endl;
         success = false;
     }
 
     if (!validateUpperPlusPeriod(LOADED_P1_WALL_5)) {
+        cout << endl;
+        cout << "Invalid P1 storage row 5" << endl;
         success = false;
     }
     // Player1 floor
     if (!validateFloor(LOADED_P1_FLOOR)) {
+        cout << endl;
+        cout << "Invalid P1 floor" << endl;
         success = false;
     }
     // Player1 mosaic
     if (!validateMosaic(LOADED_P1_MOSAIC)) {
+        cout << endl;
+        cout << "Invalid P1 mosaic" << endl;
         success = false;
     }
-    // Player2 storage
+   
+    // Player2 walls and mosaic
     if (!validateUpperPlusPeriod(LOADED_P2_WALL_1)) {
+        cout << endl;
+        cout << "Invalid P2 storage row 1" << endl;
         success = false;
     }
 
     if (!validateUpperPlusPeriod(LOADED_P2_WALL_2)) {
+        cout << endl;
+        cout << "Invalid P2 storage row 2" << endl;
         success = false;
     }
 
     if (!validateUpperPlusPeriod(LOADED_P2_WALL_3)) {
+        cout << endl;
+        cout << "Invalid P2 storage row 3" << endl;
         success = false;
     }
 
     if (!validateUpperPlusPeriod(LOADED_P2_WALL_4)) {
+        cout << endl;
+        cout << "Invalid P2 storage row 4" << endl;
         success = false;
     }
 
     if (!validateUpperPlusPeriod(LOADED_P2_WALL_5)) {
+        cout << endl;
+        cout << "Invalid P2 storage row 5" << endl;
         success = false;
     }
     // Player2 floor
     if (!validateFloor(LOADED_P2_FLOOR)) {
+        cout << endl;
+        cout << "Invalid P2 floor" << endl;
         success = false;
     }
     // Player2 mosaic
     if (!validateMosaic(LOADED_P2_MOSAIC)) {
+        cout << endl;
+        cout << "Invalid P2 mosaic" << endl;
         success = false;
     }
+    
+    // Player3 walls and mosaic
+    if (LOADED_NUMPLAYERS == "3" || LOADED_NUMPLAYERS == "4") {
+        // Player3 Storage 
+        if (!validateUpperPlusPeriod(LOADED_P3_WALL_1)) {
+            cout << endl;
+            cout << "Invalid P3 storage row 1" << endl;
+            success = false;
+        }
+
+        if (!validateUpperPlusPeriod(LOADED_P3_WALL_2)) {
+            cout << endl;
+            cout << "Invalid P3 storage row 2" << endl;
+            success = false;
+        }
+
+        if (!validateUpperPlusPeriod(LOADED_P3_WALL_3)) {
+            cout << endl;
+            cout << "Invalid P3 storage row 3" << endl;
+            success = false;
+        }
+
+        if (!validateUpperPlusPeriod(LOADED_P3_WALL_4)) {
+            cout << endl;
+            cout << "Invalid P3 storage row 4" << endl;
+            success = false;
+        }
+
+        if (!validateUpperPlusPeriod(LOADED_P3_WALL_5)) {
+            cout << endl;
+            cout << "Invalid P3 storage row 5" << endl;
+            success = false;
+        }
+        // Player3 floor
+        if (!validateFloor(LOADED_P3_FLOOR)) {
+            cout << endl;
+            cout << "Invalid P3 floor" << endl;
+            success = false;
+        }
+        // Player3 mosaic
+        if (!validateMosaic(LOADED_P3_MOSAIC)) {
+            cout << endl;
+            cout << "Invalid P3 mosaic" << endl;
+            success = false;
+        }
+    }
+
+    // PLayer4 walls and mosaic
+    if (LOADED_NUMPLAYERS == "4") {
+        // Player3 Storage 
+        if (!validateUpperPlusPeriod(LOADED_P4_WALL_1)) {
+            cout << endl;
+            cout << "Invalid P4 storage row 1" << endl;
+            success = false;
+        }
+
+        if (!validateUpperPlusPeriod(LOADED_P4_WALL_2)) {
+            cout << endl;
+            cout << "Invalid P4 storage row 2" << endl;
+            success = false;
+        }
+
+        if (!validateUpperPlusPeriod(LOADED_P4_WALL_3)) {
+            cout << endl;
+            cout << "Invalid P4 storage row 3" << endl;
+            success = false;
+        }
+
+        if (!validateUpperPlusPeriod(LOADED_P4_WALL_4)) {
+            cout << endl;
+            cout << "Invalid P4 storage row 4" << endl;
+            success = false;
+        }
+
+        if (!validateUpperPlusPeriod(LOADED_P4_WALL_5)) {
+            cout << endl;
+            cout << "Invalid P4 storage row 5" << endl;
+            success = false;
+        }
+        // Player3 floor
+        if (!validateFloor(LOADED_P4_FLOOR)) {
+            cout << endl;
+            cout << "Invalid P4 floor" << endl;
+            success = false;
+        }
+        // Player3 mosaic
+        if (!validateMosaic(LOADED_P4_MOSAIC)) {
+            cout << endl;
+            cout << "Invalid P4 mosaic" << endl;
+            success = false;
+        }
+    }
+
     // boxLid
     if (!validateTileBag(LOADED_LID)) {
+        cout << endl;
+        cout << "Invalid box lid" << endl;
         success = false;
     }
     // tileBag
     if (!validateTileBag(LOADED_TILE_BAG)) {
+        cout << endl;
+        cout << "Invalid tile bag" << endl;
         success = false;
     }
 
     return success;
 }
 
-bool Game::validateFactory1to5(string str) {
+bool Game::validateFactory1to9(string str) {
 
     bool success = true;
 
@@ -1573,7 +1809,8 @@ bool Game::validateFactory1to5(string str) {
     }
 
     if (str.length() > FACTORY_MAX_TILES) {
-         success = false;
+        cout << "Factory length too big" << endl;
+        success = false;
     }
 
     return success;
@@ -1588,7 +1825,8 @@ bool Game::validateTileBag(string str) {
     }
 
     if (str.length() > BAG_MAX_TILES) {
-         success = false;
+        cout << "Tile bag length too big" << endl;
+        success = false;
     }
 
     return success;
@@ -1630,7 +1868,7 @@ bool Game::validateUpper(string str) {
 
     for (char c : str) {
         if (c != 'B' && c != 'Y' && c != 'R' && c != 'U' && c != 'L') {
-            cout << c << endl;
+            cout << c  << " is not a valid tile" << endl;
             success = false;
         }
     }
@@ -1645,7 +1883,7 @@ bool Game::validateUpperPlusF(string str) {
     if (str.length() != 0) {
         for (char c : str) {
             if (c != 'B' && c != 'Y' && c != 'R' && c != 'U' && c != 'L' && c != 'F') {
-                cout << c << endl;
+                cout << c << " is not a valid tile" << endl;
                 success = false;
             }
         }
@@ -1664,7 +1902,7 @@ bool Game::validateLower(string str) {
 
     for (char c : str) {
         if (c != 'b' && c != 'y' && c != 'r' && c != 'u' && c != 'l') {
-            cout << c << endl;
+            cout << c << " is not a valid tile" << endl;
             success = false;
         }
     }
@@ -1678,7 +1916,7 @@ bool Game::validateUpperPlusPeriod(string str) {
 
     for (char c : str) {
         if (c != 'B' && c != 'Y' && c != 'R' && c != 'U' && c != 'L' && c != '.') {
-            cout << c << endl;
+            cout << c << " is not a valid tile" << endl;
             success = false;
         }
     }
