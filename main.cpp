@@ -116,7 +116,7 @@ void menuSelection() {
                     cout << "Error loading file" << endl;
 
                 } else {
-                    cout << "successfully loaded game" << endl;
+                    cout << "Successfully loaded game" << endl;
                     game->start();
                 }
 

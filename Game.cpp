@@ -91,6 +91,10 @@ Game::Game(string player1Name, string player2Name, string player3Name, string pl
         factory0->addTile(tile);
 
     }
+
+    for (int i = 0; i < 4; ++i) {
+        fourTiles[i] = nullptr;
+    }
     
     // Misc
     isNewRound = true;
@@ -101,7 +105,14 @@ Game::Game(string player1Name, string player2Name, string player3Name, string pl
 
 }
 
-Game::Game() {
+Game::Game():
+    seed(false),
+    intSeed(0)
+{
+    for (int i = 0; i < 4; ++i) {
+        fourTiles[i] = nullptr;
+    }
+
     isNewRound = false;
     p1RoundScore = 0;
     p2RoundScore = 0;
@@ -564,7 +575,11 @@ void Game::roundSetup() {
 void Game::grabFourTiles() {
 
     for (int i = 0; i < 4; ++i) {
-        fourTiles[i] = tileBag->drawTile();
+        if (tileBag->getLength() != 0) {
+            fourTiles[i] = tileBag->drawTile();
+        } else {
+            fourTiles[i] = nullptr;
+        }
     }
 }
 
@@ -1155,24 +1170,24 @@ bool Game::saveGame(string filename) {
 
         // Who's turn
         if (player1->getTurn()) {
-            outfile << "1" << std::endl;
+            outfile << "1" << endl;
         } else if (player2->getTurn()) {
-            outfile << "2" << std::endl;
+            outfile << "2" << endl;
         } else if (player3 != nullptr && player3->getTurn()) {
-            outfile << "3" << std::endl;
+            outfile << "3" << endl;
         } else if (player4 != nullptr && player4->getTurn()) {
-            outfile << "4" << std::endl;
+            outfile << "4" << endl;
         }
         // P1 details
-        outfile << player1->getName() << std::endl;
-        outfile << player1->getScore() << std::endl;
+        outfile << player1->getName() << endl;
+        outfile << player1->getScore() << endl;
         // P2 details
-        outfile << player2->getName() << std::endl;
-        outfile << player2->getScore() << std::endl;
+        outfile << player2->getName() << endl;
+        outfile << player2->getScore() << endl;
         // P3 details
         if (player3 != nullptr) {
-            outfile << player3->getName() << std::endl;
-            outfile << player3->getScore() << std::endl;
+            outfile << player3->getName() << endl;
+            outfile << player3->getScore() << endl;
             
         } else {
             outfile << endl;
@@ -1180,8 +1195,8 @@ bool Game::saveGame(string filename) {
         }
         // P4 details
         if (player4 != nullptr) {
-            outfile << player4->getName() << std::endl;
-            outfile << player4->getScore() << std::endl;
+            outfile << player4->getName() << endl;
+            outfile << player4->getScore() << endl;
             
         } else {
             outfile << endl;
@@ -1192,9 +1207,9 @@ bool Game::saveGame(string filename) {
         outfile << numFactories << endl;
 
         // Factories 0-00
-        outfile << factory0->printFactory() << std::endl;
+        outfile << factory0->printFactory() << endl;
         if (factory00 != nullptr) {
-            outfile << factory00->printFactory() << std::endl;
+            outfile << factory00->printFactory() << endl;
 
         } else {
             outfile << endl;
@@ -1202,15 +1217,15 @@ bool Game::saveGame(string filename) {
         }
 
         // Factories 1-5
-        outfile << factory1->printFactory() << std::endl;
-        outfile << factory2->printFactory() << std::endl;
-        outfile << factory3->printFactory() << std::endl;
-        outfile << factory4->printFactory() << std::endl;
-        outfile << factory5->printFactory() << std::endl;
+        outfile << factory1->printFactory() << endl;
+        outfile << factory2->printFactory() << endl;
+        outfile << factory3->printFactory() << endl;
+        outfile << factory4->printFactory() << endl;
+        outfile << factory5->printFactory() << endl;
         // Factories 6-7
         if (factory6 != nullptr) {
-            outfile << factory6->printFactory() << std::endl;
-            outfile << factory7->printFactory() << std::endl;
+            outfile << factory6->printFactory() << endl;
+            outfile << factory7->printFactory() << endl;
 
         } else {
             outfile << endl;
@@ -1219,8 +1234,8 @@ bool Game::saveGame(string filename) {
         }
         // Factories 8-9
         if (factory8 != nullptr) {
-            outfile << factory8->printFactory() << std::endl;
-            outfile << factory9->printFactory() << std::endl;
+            outfile << factory8->printFactory() << endl;
+            outfile << factory9->printFactory() << endl;
 
         } else {
             outfile << endl;
@@ -1229,39 +1244,39 @@ bool Game::saveGame(string filename) {
         }
 
         // P1 Storage
-        outfile << player1->getMosaic()->getStorage1(false, type) << std::endl;
-        outfile << player1->getMosaic()->getStorage2(false, type) << std::endl;
-        outfile << player1->getMosaic()->getStorage3(false, type) << std::endl;
-        outfile << player1->getMosaic()->getStorage4(false, type) << std::endl;
-        outfile << player1->getMosaic()->getStorage5(false, type) << std::endl;
+        outfile << player1->getMosaic()->getStorage1(false, type) << endl;
+        outfile << player1->getMosaic()->getStorage2(false, type) << endl;
+        outfile << player1->getMosaic()->getStorage3(false, type) << endl;
+        outfile << player1->getMosaic()->getStorage4(false, type) << endl;
+        outfile << player1->getMosaic()->getStorage5(false, type) << endl;
         // P1 Floor
-        outfile << player1->getFloor()->saveFloor() << std::endl;
+        outfile << player1->getFloor()->saveFloor() << endl;
         // P1 Mosaic wall
-        outfile << player1->getMosaic()->getCompletedTiles(false) << std::endl;
+        outfile << player1->getMosaic()->getCompletedTiles(false) << endl;
 
         // P2 Mosaic
-        outfile << player2->getMosaic()->getStorage1(false, type) << std::endl;
-        outfile << player2->getMosaic()->getStorage2(false, type) << std::endl;
-        outfile << player2->getMosaic()->getStorage3(false, type) << std::endl;
-        outfile << player2->getMosaic()->getStorage4(false, type) << std::endl;
-        outfile << player2->getMosaic()->getStorage5(false, type) << std::endl;
+        outfile << player2->getMosaic()->getStorage1(false, type) << endl;
+        outfile << player2->getMosaic()->getStorage2(false, type) << endl;
+        outfile << player2->getMosaic()->getStorage3(false, type) << endl;
+        outfile << player2->getMosaic()->getStorage4(false, type) << endl;
+        outfile << player2->getMosaic()->getStorage5(false, type) << endl;
         // P2 Floor
-        outfile << player2->getFloor()->saveFloor() << std::endl;
+        outfile << player2->getFloor()->saveFloor() << endl;
         // P2 Mosaic wall
-        outfile << player2->getMosaic()->getCompletedTiles(false) << std::endl;
+        outfile << player2->getMosaic()->getCompletedTiles(false) << endl;
 
         // P3
         if (player3 != nullptr) {
             // P3 Mosaic
-            outfile << player3->getMosaic()->getStorage1(false, type) << std::endl;
-            outfile << player3->getMosaic()->getStorage2(false, type) << std::endl;
-            outfile << player3->getMosaic()->getStorage3(false, type) << std::endl;
-            outfile << player3->getMosaic()->getStorage4(false, type) << std::endl;
-            outfile << player3->getMosaic()->getStorage5(false, type) << std::endl;
+            outfile << player3->getMosaic()->getStorage1(false, type) << endl;
+            outfile << player3->getMosaic()->getStorage2(false, type) << endl;
+            outfile << player3->getMosaic()->getStorage3(false, type) << endl;
+            outfile << player3->getMosaic()->getStorage4(false, type) << endl;
+            outfile << player3->getMosaic()->getStorage5(false, type) << endl;
             // P3 Floor
-            outfile << player3->getFloor()->saveFloor() << std::endl;
+            outfile << player3->getFloor()->saveFloor() << endl;
             // P3 Mosaic wall
-            outfile << player3->getMosaic()->getCompletedTiles(false) << std::endl;
+            outfile << player3->getMosaic()->getCompletedTiles(false) << endl;
 
         } else {
             for (int i = 0; i < 7; ++i) {
@@ -1273,15 +1288,15 @@ bool Game::saveGame(string filename) {
         // P4
         if (player4 != nullptr) {
             // P4 Mosaic
-            outfile << player4->getMosaic()->getStorage1(false, type) << std::endl;
-            outfile << player4->getMosaic()->getStorage2(false, type) << std::endl;
-            outfile << player4->getMosaic()->getStorage3(false, type) << std::endl;
-            outfile << player4->getMosaic()->getStorage4(false, type) << std::endl;
-            outfile << player4->getMosaic()->getStorage5(false, type) << std::endl;
+            outfile << player4->getMosaic()->getStorage1(false, type) << endl;
+            outfile << player4->getMosaic()->getStorage2(false, type) << endl;
+            outfile << player4->getMosaic()->getStorage3(false, type) << endl;
+            outfile << player4->getMosaic()->getStorage4(false, type) << endl;
+            outfile << player4->getMosaic()->getStorage5(false, type) << endl;
             // P4 Floor
-            outfile << player4->getFloor()->saveFloor() << std::endl;
+            outfile << player4->getFloor()->saveFloor() << endl;
             // P4 Mosaic wall
-            outfile << player4->getMosaic()->getCompletedTiles(false) << std::endl;
+            outfile << player4->getMosaic()->getCompletedTiles(false) << endl;
 
         } else {
             for (int i = 0; i < 7; ++i) {
@@ -1295,14 +1310,17 @@ bool Game::saveGame(string filename) {
             outfile << boxLid->getTiles()->get(i)->printTile();
 
         }
-        outfile << std::endl;
+        outfile << endl;
 
         // tileBag
         for (int i = 0; i < tileBag->getTiles()->getListSize(); ++i){
             outfile << tileBag->getTiles()->get(i)->printTile();
 
         }
-        outfile << std::endl;
+        outfile << endl;
+
+        // Display type
+        outfile << type << endl;
         
         outfile.close();
 
@@ -1366,34 +1384,80 @@ bool Game::loadGame(string filename) {
 }
 
 void Game::initializeObjectsFromArray(std::string LOADED_GAME_FILE) {
-    
+
     // Load tileBag
     tileBag = new TileBag(LOADED_TILE_BAG);
 
-    // Load player turn
-    bool p1turn;
-    if (LOADED_TURN == "1") {
-        p1turn = true;
+    // Load type
+    type = LOADED_TYPE;
 
-    } else {
-        p1turn = false;
+    // Load number of players and factories
+    numPlayers = stoi(LOADED_NUMPLAYERS);
+    numFactories = stoi(LOADED_NUMFACTORIES);
+
+    // Load turn
+    bool p1Turn = false;
+    bool p2Turn = false;
+    bool p3Turn = false;
+    bool p4Turn = false;
+
+    if (LOADED_TURN == "1") {
+        p1Turn = true;
+    } else if (LOADED_TURN == "2") {
+        p2Turn = true;
+    } else if (LOADED_TURN == "3") {
+        p3Turn = true;
+    } else if (LOADED_TURN == "4") {
+        p4Turn = true;
     }
+
 
     // Load mosaics for players
     string p1storage[6] = {LOADED_P1_WALL_1, LOADED_P1_WALL_2, LOADED_P1_WALL_3, LOADED_P1_WALL_4, LOADED_P1_WALL_5, LOADED_P1_MOSAIC};
     string p2storage[6] = {LOADED_P2_WALL_1, LOADED_P2_WALL_2, LOADED_P2_WALL_3, LOADED_P2_WALL_4, LOADED_P2_WALL_5, LOADED_P2_MOSAIC};
-
     // Load player details
-    player1 = new Player(LOADED_P1_NAME, std::stoi(LOADED_P1_SCORE), p1turn, LOADED_P1_FLOOR, p1storage);
-    player2 = new Player(LOADED_P2_NAME, std::stoi(LOADED_P2_SCORE), !p1turn, LOADED_P2_FLOOR, p2storage);
+    player1 = new Player(LOADED_P1_NAME, std::stoi(LOADED_P1_SCORE), p1Turn, LOADED_P1_FLOOR, p1storage);
+    player2 = new Player(LOADED_P2_NAME, std::stoi(LOADED_P2_SCORE), p2Turn, LOADED_P2_FLOOR, p2storage);
+    player3 = nullptr;
+    player4 = nullptr;
+
+    if (numPlayers == 3 || numPlayers == 4) {
+        string p3storage[6] = {LOADED_P3_WALL_1, LOADED_P3_WALL_2, LOADED_P3_WALL_3, LOADED_P3_WALL_4, LOADED_P3_WALL_5, LOADED_P3_MOSAIC};
+        player3 = new Player(LOADED_P3_NAME, std::stoi(LOADED_P3_SCORE), p3Turn, LOADED_P3_FLOOR, p3storage);
+
+    }
+    if (numPlayers == 4) {
+        string p4storage[6] = {LOADED_P4_WALL_1, LOADED_P4_WALL_2, LOADED_P4_WALL_3, LOADED_P4_WALL_4, LOADED_P4_WALL_5, LOADED_P4_MOSAIC};
+        player4 = new Player(LOADED_P4_NAME, std::stoi(LOADED_P4_SCORE), p4Turn, LOADED_P4_FLOOR, p4storage);
+
+    }
     
-    // Load factories
+    // Load factories 0-00
     factory0 = new FactoryVector(LOADED_FACTORY_0);
+    factory00 = nullptr;
+    if (numFactories == 2) {
+        factory00 = new FactoryVector(LOADED_FACTORY_00);
+    }
+
+    // Load factories 1-9
     factory1 = new FactoryArray(LOADED_FACTORY_1);
     factory2 = new FactoryArray(LOADED_FACTORY_2);
     factory3 = new FactoryArray(LOADED_FACTORY_3);
     factory4 = new FactoryArray(LOADED_FACTORY_4);
     factory5 = new FactoryArray(LOADED_FACTORY_5);
+    factory6 = nullptr;
+    factory7 = nullptr;
+    factory8 = nullptr;
+    factory9 = nullptr;
+    if (numPlayers == 3 || numPlayers == 4) {
+        factory6 = new FactoryArray(LOADED_FACTORY_6);
+        factory7 = new FactoryArray(LOADED_FACTORY_7);
+    }
+    if (numPlayers == 4) {
+        factory8 = new FactoryArray(LOADED_FACTORY_8);
+        factory9 = new FactoryArray(LOADED_FACTORY_9);
+    }
+    
 
     // Load boxLid
     if (LOADED_LID == "") {
@@ -1402,6 +1466,8 @@ void Game::initializeObjectsFromArray(std::string LOADED_GAME_FILE) {
     } else {
         boxLid = new TileBag(LOADED_LID);
     }
+
+
 }
 
 bool Game::validateLoadedArray(std::string LOADED_GAME_FILE) {
@@ -1794,6 +1860,12 @@ bool Game::validateLoadedArray(std::string LOADED_GAME_FILE) {
     if (!validateTileBag(LOADED_TILE_BAG)) {
         cout << endl;
         cout << "Invalid tile bag" << endl;
+        success = false;
+    }
+
+    if (LOADED_TYPE != "letters" && LOADED_TYPE != "symbols") {
+        cout << endl;
+        cout << "Not a valid display type" << endl;
         success = false;
     }
 

@@ -68,7 +68,7 @@
 #define BARRIER             "||"
 
 //Loaded lines from savefile
-#define NUM_SAVE_FILE_LINES     52
+#define NUM_SAVE_FILE_LINES     53
 
 #define LOADED_GAME_FILE        loadedArray[]
 
@@ -131,6 +131,7 @@
 
 #define LOADED_LID              loadedArray[50]
 #define LOADED_TILE_BAG         loadedArray[51]
+#define LOADED_TYPE             loadedArray[52]
 
 
 #endif // COSC_ASS_TWO_TYPES

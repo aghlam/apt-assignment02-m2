@@ -263,6 +263,7 @@ private:
     int numPlayers;
     int numFactories;
 
+    // Display type
     string type;
 
     int p1RoundScore;
