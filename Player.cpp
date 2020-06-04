@@ -4,13 +4,13 @@
 Player::Player(string name):
     name(name),
     score(0),
-    turn(true)
+    turn(false)
 {
     floor = new Floor();
     mosaic = new Mosaic();
 }
 
-Player::Player(string name, int score, bool turn, string savedFloor, string savedMosaic[]) {
+Player::Player(string name, int score, string savedFloor, string savedMosaic[]) {
     
     this->name = name;
     this->score = score;

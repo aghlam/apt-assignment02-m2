@@ -9,61 +9,32 @@ Game::Game(string player1Name, string player2Name, string player3Name, string pl
     type(type)
 {
     // Player intialisation and factory initialisation according to numPlayers
-    if (numPlayers == 2) {
-        player1 = new Player(player1Name);
-        player2 = new Player(player2Name);
-        player2->setTurn(false);
+    player1 = new Player(player1Name);
+    player2 = new Player(player2Name);
+    player1->setTurn(true);
+    player3 = nullptr;
+    player4 = nullptr;
 
-        player3 = nullptr;
-        player4 = nullptr;
+    factory1 = new FactoryArray();
+    factory2 = new FactoryArray();
+    factory3 = new FactoryArray();
+    factory4 = new FactoryArray();
+    factory5 = new FactoryArray();
+    factory6 = nullptr;
+    factory7 = nullptr;
+    factory8 = nullptr;
+    factory9 = nullptr;
 
-        factory1 = new FactoryArray();
-        factory2 = new FactoryArray();
-        factory3 = new FactoryArray();
-        factory4 = new FactoryArray();
-        factory5 = new FactoryArray();
-        factory6 = nullptr;
-        factory7 = nullptr;
-        factory8 = nullptr;
-        factory9 = nullptr;
-
-    } else if (numPlayers == 3) {
-
-        player1 = new Player(player1Name);
-        player2 = new Player(player2Name);
+    if (numPlayers == 3 || numPlayers == 4) {
         player3 = new Player(player3Name);
-        player2->setTurn(false);
-        player3->setTurn(false);
 
-        player4 = nullptr;
-
-        factory1 = new FactoryArray();
-        factory2 = new FactoryArray();
-        factory3 = new FactoryArray();
-        factory4 = new FactoryArray();
-        factory5 = new FactoryArray();
         factory6 = new FactoryArray();
         factory7 = new FactoryArray();
-        factory8 = nullptr;
-        factory9 = nullptr;
+    }
 
-    } else if (numPlayers == 4) {
-
-        player1 = new Player(player1Name);
-        player2 = new Player(player2Name);
-        player3 = new Player(player3Name);
+    if (numPlayers == 4) {
         player4 = new Player(player4name);
-        player2->setTurn(false);
-        player3->setTurn(false);
-        player4->setTurn(false);
 
-        factory1 = new FactoryArray();
-        factory2 = new FactoryArray();
-        factory3 = new FactoryArray();
-        factory4 = new FactoryArray();
-        factory5 = new FactoryArray();
-        factory6 = new FactoryArray();
-        factory7 = new FactoryArray();
         factory8 = new FactoryArray();
         factory9 = new FactoryArray();
         
@@ -77,26 +48,21 @@ Game::Game(string player1Name, string player2Name, string player3Name, string pl
     boxLid = new TileBag();
     
     // Center factory initialisation
-    if (numFactories == 1) {
-        factory0 = new FactoryVector();
-        Tile* tile = new Tile(FIRST_PLAYER);
-        factory0->addTile(tile);
+    factory0 = new FactoryVector();
+    Tile* tile = new Tile(FIRST_PLAYER);
+    factory0->addTile(tile);
 
-        factory00 = nullptr;
+    factory00 = nullptr;
 
-    } else if (numFactories == 2) {
-        factory0 = new FactoryVector();
+    if (numFactories == 2) {
         factory00 = new FactoryVector();
-        Tile* tile = new Tile(FIRST_PLAYER);
-        factory0->addTile(tile);
-
     }
 
+    // Misc initialisation
     for (int i = 0; i < 4; ++i) {
         fourTiles[i] = nullptr;
     }
     
-    // Misc
     isNewRound = true;
     p1RoundScore = 0;
     p2RoundScore = 0;
@@ -166,7 +132,7 @@ Game::~Game() {
     }
 
     for (int i = 0; i < 4; ++i) {
-        if (fourTiles[i]!=nullptr) {
+        if (fourTiles[i] != nullptr) {
             delete fourTiles[i];
             fourTiles[i] = nullptr;
         }
@@ -179,7 +145,9 @@ void Game::start() {
 
     bool finished = false;
 
-    while (!finished) {
+    while (!finished) { // Gameplay loop
+
+        bool round = true;
 
         cout << endl;
         cout << "=== ROUND START! ===" << endl;
@@ -193,9 +161,8 @@ void Game::start() {
             cout << "Press ENTER to contine.." << endl;
             std::cin.get();
         }
-
-        bool round = true;
-        while (round) {
+        
+        while (round) { // Start round loop
             // For updating after loading
             player1->getMosaic()->updateColourArray(type);
             player2->getMosaic()->updateColourArray(type);
@@ -209,20 +176,17 @@ void Game::start() {
             // Check player's turn
             if (player1->getTurn()) {
                 playTurn(player1);
-
             } else if (player2->getTurn()) {
                 playTurn(player2);
-
             } else if (player3 != nullptr && player3->getTurn()) {
                 playTurn(player3);
-
             } else if (player4 != nullptr && player4->getTurn()) {
                 playTurn(player4);
-
             }
 
             round = checkRoundEnd();
-        }
+            
+        } // End round loop
 
         // After round functions
         // Set next player first turn
@@ -232,12 +196,9 @@ void Game::start() {
         cout << endl;
         cout << "=== ROUND INFO ====" << endl;
         cout << endl;
-        // Print mosaics at end of round
         cout << "Player mosaics at end of round (before score calculation):" << endl;
         printMosaicAll(player1, player2, player3, player4);
         calculateScores();
-
-        // End round messages
         printEndRoundMsg();
 
         isNewRound = true;
@@ -246,7 +207,11 @@ void Game::start() {
         finished = (player1->getMosaic()->checkWin() || player2->getMosaic()->checkWin() 
             || (player3 != nullptr && player3->getMosaic()->checkWin()) || (player4 != nullptr && player4->getMosaic()->checkWin()));
 
-    }
+        if (tileBag->getLength() == 0 && boxLid->getLength() == 0) {
+            finished = true;
+        }
+
+    } // End gameplay loop
 
     // End game functions
     // Add in end game/bonus points
@@ -254,182 +219,49 @@ void Game::start() {
     player2->addScore(player2->getMosaic()->bonusPoints());
     if (player3 != nullptr) {
         player3->addScore(player3->getMosaic()->bonusPoints());
-
     }
     if (player4 != nullptr) {
         player4->addScore(player4->getMosaic()->bonusPoints());
-
     }
-
+    
     printEndGameMsg();
 
 }
 
-void Game::printEndRoundMsg() {
-
-    cout << endl;
-    cout << "--- After score calculation ---" << endl;
-    cout << "Points scored this round:" << endl;
-    cout << "Player " << player1->getName() << ": " << p1RoundScore << endl;
-    cout << "Player " << player2->getName() << ": " << p2RoundScore << endl;
-    if (player3 != nullptr) {
-        cout << "Player " << player3->getName() << ": " << p3RoundScore << endl;
-    }
-    if (player4 != nullptr) {
-        cout << "Player " << player4->getName() << ": " << p4RoundScore << endl;
-    }
-    cout << endl;
-
-    // Print out total player scores
-    cout << "Total scores:" << endl;
-    cout << "Player " << player1->getName() << "'s score: " << player1->getScore() << endl;
-    cout << "Player " << player2->getName() << "'s score: " << player2->getScore() << endl;
-    if (player3 != nullptr) {
-        cout << "Player " << player3->getName() << "'s score: " << player3->getScore() << endl;
-    }
-    if (player4 != nullptr) {
-        cout << "Player " << player4->getName() << "'s score: " << player4->getScore() << endl;
-    }
-    cout << endl;
-
-    // Print moves taken in round
-    cout << "< The following turns took place >" << endl;
-    for (string output : roundInformation) {
-        cout << output << endl;
-
-    }
-    lastRoundInformation = roundInformation;
-    roundInformation.clear();
-
-    cout << endl;
-    cout << "=== END OF ROUND ===" << endl;
-    cout << "Press ENTER to continue.." << endl;
-    std::cin.get();
-
-}
-
-void Game::printEndGameMsg() {
-
-    cout << endl;
-    cout << "==== GAME OVER! ====" << endl;
-    cout << endl;
-
-    // Display winner message
-
-    if (player4 != nullptr) {
-        if (player1->getScore() > player2->getScore() && player1->getScore() > player3->getScore() && player1->getScore() > player4->getScore()) {
-            cout << "Player " << player1->getName() << " wins!" << endl;
-            cout << endl;
-
-        } else if (player2->getScore() > player1->getScore() && player2->getScore() > player3->getScore() && player2->getScore() > player4->getScore()) {
-            cout << "Player " << player2->getName() << " wins!" << endl;
-            cout << endl;
-
-        } else if (player3->getScore() > player1->getScore() && player3->getScore() > player2->getScore() && player3->getScore() > player4->getScore()) {
-            cout << "Player " << player3->getName() << " wins!" << endl;
-            cout << endl;
-
-        } else if (player4->getScore() > player1->getScore() && player4->getScore() > player2->getScore() && player4->getScore() > player3->getScore()) {
-            cout << "Player " << player4->getName() << " wins!" << endl;
-            cout << endl;
-
-        }
-
-    } else if (player3 != nullptr) {
-        if (player1->getScore() > player2->getScore() && player1->getScore() > player3->getScore()) {
-            cout << "Player " << player1->getName() << " wins!" << endl;
-            cout << endl;
-
-        } else if (player2->getScore() > player1->getScore() && player2->getScore() > player3->getScore()) {
-            cout << "Player " << player2->getName() << " wins!" << endl;
-            cout << endl;
-
-        } else if (player3->getScore() > player1->getScore() && player3->getScore() > player2->getScore()) {
-            cout << "Player " << player3->getName() << " wins!" << endl;
-            cout << endl;
-
-        }
-
-    } else {
-        if (player1->getScore() > player2->getScore() ) {
-            cout << "Player " << player1->getName() << " wins!" << endl;
-            cout << endl;
-
-        } else if (numPlayers == 2 && player2->getScore() > player1->getScore()) {
-            cout << "Player " << player2->getName() << " wins!" << endl;
-            cout << endl;
-
-        } else {
-            cout << "Draw game!" << endl;
-            cout << endl;
-        }
-
-    }
-
-
-    cout << "Final Scores:" << endl;
-    cout << "Player " << player1->getName() << " Score:" << player1->getScore() << endl;
-    cout << "Player " << player2->getName() << " Score:" << player2->getScore() << endl;
-    if (player3 != nullptr) {
-        cout << "Player " << player3->getName() << " Score:" << player3->getScore() << endl;
-
-    }
-    if (player4 != nullptr) {
-        cout << "Player " << player4->getName() << " Score:" << player4->getScore() << endl;
-
-    }
-    cout << endl;
-    cout << "Thank you for playing!" << endl;
-    cout << "Returning to main menu!" << endl;
-    cout << "Press ENTER to continue.." << endl;
-    std::cin.get();
-    cout << endl;
-
-}
-
 void Game::calculateScores() {
-    // Calculates scores on mosaic and move from storage to completed side
-    p1RoundScore = player1->getMosaic()->placeCompleted();
-    p2RoundScore = player2->getMosaic()->placeCompleted();
-    if (player3 != nullptr) {
-        p3RoundScore = player3->getMosaic()->placeCompleted();
-    }
-    if (player4 != nullptr) {
-        p4RoundScore = player4->getMosaic()->placeCompleted();
-    }
 
-    // P1 remaining tiles added to boxLid
+    // P1 score calculation and remaining tiles added to boxLid
+    p1RoundScore = player1->getMosaic()->placeCompleted();
     for (int i = 0; i < player1->getMosaic()->getToLidBox()->getListSize(); ++i) {
         Tile* tile = new Tile(*player1->getMosaic()->getToLidBox()->getFront());
         boxLid->addTile(tile);
-
     }
     player1->getMosaic()->clearToBoxLid();
 
-    // P2 remaining tiles added to boxLid
+    // P2 score calculation and remaining tiles added to boxLid
+    p2RoundScore = player2->getMosaic()->placeCompleted();
     for (int i = 0; i < player2->getMosaic()->getToLidBox()->getListSize(); ++i) {
         Tile* tile = new Tile(*player2->getMosaic()->getToLidBox()->getFront());
         boxLid->addTile(tile);
-
     }
     player2->getMosaic()->clearToBoxLid(); 
 
-    // P3 remaining tiles added to boxLid
+    // P3 score calculation and remaining tiles added to boxLid
     if (player3 != nullptr) {
+        p3RoundScore = player3->getMosaic()->placeCompleted();
         for (int i = 0; i < player3->getMosaic()->getToLidBox()->getListSize(); ++i) {
-        Tile* tile = new Tile(*player3->getMosaic()->getToLidBox()->getFront());
-        boxLid->addTile(tile);
-
+            Tile* tile = new Tile(*player3->getMosaic()->getToLidBox()->getFront());
+            boxLid->addTile(tile);
         }
         player3->getMosaic()->clearToBoxLid(); 
     }
 
-    // P4 remaining tiles added to boxLid
+    // P4 score calculation and remaining tiles added to boxLid
     if (player4 != nullptr) {
+        p4RoundScore = player4->getMosaic()->placeCompleted();
         for (int i = 0; i < player4->getMosaic()->getToLidBox()->getListSize(); ++i) {
-        Tile* tile = new Tile(*player4->getMosaic()->getToLidBox()->getFront());
-        boxLid->addTile(tile);
-
+            Tile* tile = new Tile(*player4->getMosaic()->getToLidBox()->getFront());
+            boxLid->addTile(tile);
         }
         player4->getMosaic()->clearToBoxLid(); 
     }
@@ -453,47 +285,36 @@ void Game::calculateScores() {
         }
     }
 
-    // Minus floor score from player total score and remove floor tiles
+    // Minus floor score from player total score and remove floor tiles then
+    // Add round scores to player total score
     p1RoundScore -= player1->getFloor()->calculateFloorScore();
+    player1->addScore(p1RoundScore);
+
     p2RoundScore -= player2->getFloor()->calculateFloorScore();
+    player2->addScore(p2RoundScore);
+
     if (player3 != nullptr) {
         p3RoundScore -= player3->getFloor()->calculateFloorScore();
-
+        player3->addScore(p3RoundScore);
     }
     if (player4 != nullptr) {
         p4RoundScore -= player3->getFloor()->calculateFloorScore();
-
-    }
-
-    // Add round scores to player total score
-    player1->addScore(p1RoundScore);
-    player2->addScore(p2RoundScore);
-    if (player3 != nullptr) {
-        player3->addScore(p3RoundScore);
-
-    }
-    if (player4 != nullptr) {
         player4->addScore(p4RoundScore);
-
     }
 
-
+    // Normalise scores if negative
     if (player1->getScore() < 0) {
         player1->setScore(0);
     }
-
     if (player2->getScore() < 0) {
         player2->setScore(0);
     }
-
     if (player3 != nullptr && player3->getScore() < 0) {
         player3->setScore(0);
     }
-
     if (player4 != nullptr && player4->getScore() < 0) {
         player4->setScore(0);
     }
-
 
 }
 
@@ -504,7 +325,6 @@ void Game::roundSetup() {
             tileBag->addTile(boxLid->drawTile());
         }
     }
-
     // Fill factories and sort them
     grabFourTiles();
     for (Tile* tile : fourTiles) {
@@ -589,19 +409,18 @@ bool Game::checkRoundEnd() {
 
     if (factory0->getLength() == 0 && factory1->size() == 0 && factory2->size() == 0 
         && factory3->size() == 0 && factory4->size() == 0 && factory5->size() == 0) {
-
-            round = false;
+        round = false;
     }
 
     if (factory00 != nullptr && factory00->getLength() != 0) {
         round = true;
     }
 
-    if (factory6 != nullptr && factory7 != nullptr && (factory6->size() != 0 || factory7->size() != 0)) {
+    if (factory6 != nullptr && (factory6->size() != 0 || factory7->size() != 0)) {
         round = true;
     }
 
-    if (factory8 != nullptr && factory9 != nullptr && (factory8->size() != 0 || factory9->size() != 0)) {
+    if (factory8 != nullptr && (factory8->size() != 0 || factory9->size() != 0)) {
         round = true;
     }
 
@@ -659,6 +478,7 @@ void Game::setFirstTurnPlayer() {
         Tile* tile = player4->getFloor()->getFTile();
         factory0->addTile(tile);
     }
+
 }
 
 void Game::playTurn(Player* player) {
@@ -673,8 +493,7 @@ void Game::playTurn(Player* player) {
         placeRemaining = 'N';
     }
 
-
-    // Sort factory0 before printing
+    // Sort factory0-00 before printing
     factory0->insertionSortFactory();
     if (factory00 != nullptr) {
         factory00->insertionSortFactory();
@@ -682,28 +501,7 @@ void Game::playTurn(Player* player) {
 
     cout << "TURN FOR PLAYER: " << player->getName() << endl;
     // Print factories and mosiac
-    cout << "Factories:" << std::endl;
-    cout << "A: " << factory0->printFactoryToBoard(type) << endl;
-    if (factory00 != nullptr) {
-        cout << "Z: " << factory00->printFactoryToBoard(type) << endl;
-
-    }
-    cout << "1: " << factory1->printFactoryToBoard(type) << endl;
-    cout << "2: " << factory2->printFactoryToBoard(type) << endl;
-    cout << "3: " << factory3->printFactoryToBoard(type) << endl;
-    cout << "4: " << factory4->printFactoryToBoard(type) << endl;
-    cout << "5: " << factory5->printFactoryToBoard(type) << endl;
-    if (factory6 != nullptr) {
-        cout << "6: " << factory6->printFactoryToBoard(type) << endl;
-        cout << "7: " << factory7->printFactoryToBoard(type) << endl;
-        
-    }
-    if (factory8 != nullptr) {
-        cout << "8: " << factory8->printFactoryToBoard(type) << endl;
-        cout << "9: " << factory9->printFactoryToBoard(type) << endl;
-        
-    }
-    cout << std::endl;
+    printFactories();
 
     if(player1->getTurn()) {
         printMosaicAll(player1, player2, player3, player4);
@@ -717,7 +515,7 @@ void Game::playTurn(Player* player) {
 
     cout << "> turn: ";
 
-    // Checks for input - whether it is to save game, turn instructions or exiting game
+    // Checks for input
     if (std::cin.good()) {
         
         std::getline(std::cin, line);
@@ -814,6 +612,7 @@ void Game::playTurn(Player* player) {
                 if (factory00 != nullptr) {
                     roundChoices.append(" ");
                     roundChoices.push_back(placeRemaining);
+                    
                 }
 
                 // Playing choices for factory0 happen here as the factory is different to the other factories
@@ -859,15 +658,12 @@ void Game::playTurn(Player* player) {
                 } else if (factorySelection == '9') {
                     playChoices(player, factory9, colourSelection, placeLocation, placeRemaining);
 
-                } else {
-                    // delete this
-                    cout << "Check failed" << endl;
                 }
 
                 // Add choices to round information
                 roundInformation.push_back(roundChoices);
-                
-                cout << "Turn successful." << endl;
+                cout << endl;
+                cout << "Turn successful" << endl;
                 cout << endl;
 
                 alternateTurn();
@@ -901,52 +697,6 @@ void Game::playTurn(Player* player) {
     }
 }
 
-void Game::printMosaicAll(Player* player1, Player* player2, Player* player3, Player* player4) {
-
-    if (player3 == nullptr && player4 == nullptr) {
-        printf("%s%-20s%-8s%s%s%s", "Mosiac for: ", player1->getName().c_str(), "%", "Mosaic for: ", player2->getName().c_str(), "\n");
-        cout << player1->getMosaic()->printMosaicByRow(1, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(1, type) << endl;
-        cout << player1->getMosaic()->printMosaicByRow(2, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(2, type) << endl;
-        cout << player1->getMosaic()->printMosaicByRow(3, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(3, type) << endl;
-        cout << player1->getMosaic()->printMosaicByRow(4, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(4, type) << endl;
-        cout << player1->getMosaic()->printMosaicByRow(5, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(5, type) << endl;
-        cout << player1->getFloor()->printFloor(type) << "\t\t%\t" << player2->getFloor()->printFloor(type) << endl;
-
-    } else if (player3 != nullptr && player4 == nullptr) {
-        printf("%s%-20s%-8s%s%-20s%-8s%s%s%s", "Mosiac for: ", player1->getName().c_str(), "%", "Mosaic for: ", 
-                player2->getName().c_str(), "%", "Mosaic for: ", player3->getName().c_str(), "\n");
-        cout << player1->getMosaic()->printMosaicByRow(1, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(1, type) 
-             << "\t%\t" << player3->getMosaic()->printMosaicByRow(1, type) << endl;
-        cout << player1->getMosaic()->printMosaicByRow(2, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(2, type) 
-             << "\t%\t" << player3->getMosaic()->printMosaicByRow(2, type) << endl;
-        cout << player1->getMosaic()->printMosaicByRow(3, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(3, type) 
-             << "\t%\t" << player3->getMosaic()->printMosaicByRow(3, type) << endl;
-        cout << player1->getMosaic()->printMosaicByRow(4, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(4, type) 
-             << "\t%\t" << player3->getMosaic()->printMosaicByRow(4, type) << endl;
-        cout << player1->getMosaic()->printMosaicByRow(5, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(5, type)
-             << "\t%\t" << player3->getMosaic()->printMosaicByRow(5, type) << endl;
-        cout << player1->getFloor()->printFloor(type) << "\t\t%\t" << player2->getFloor()->printFloor(type) << "\t\t%\t" << player3->getFloor()->printFloor(type) << endl;
-
-    } else {
-        printf("%s%-20s%-8s%s%-20s%-8s%s%-20s%-8s%s%s%s", "Mosiac for: ", player1->getName().c_str(), "%", "Mosaic for: ", 
-                player2->getName().c_str(), "%", "Mosaic for: ", player3->getName().c_str(), "%", "Mosaic for: ", player4->getName().c_str(), "\n");
-        cout << player1->getMosaic()->printMosaicByRow(1, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(1, type) 
-             << "\t%\t" << player3->getMosaic()->printMosaicByRow(1, type) << "\t%\t" << player4->getMosaic()->printMosaicByRow(1, type) << endl;
-        cout << player1->getMosaic()->printMosaicByRow(2, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(2, type)
-             << "\t%\t" << player3->getMosaic()->printMosaicByRow(2, type) << "\t%\t" << player4->getMosaic()->printMosaicByRow(2, type) << endl;
-        cout << player1->getMosaic()->printMosaicByRow(3, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(3, type)
-             << "\t%\t" << player3->getMosaic()->printMosaicByRow(3, type) << "\t%\t" << player4->getMosaic()->printMosaicByRow(3, type) << endl;
-        cout << player1->getMosaic()->printMosaicByRow(4, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(4, type)
-             << "\t%\t" << player3->getMosaic()->printMosaicByRow(4, type) << "\t%\t" << player4->getMosaic()->printMosaicByRow(4, type) << endl;
-        cout << player1->getMosaic()->printMosaicByRow(5, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(5, type)
-             << "\t%\t" << player3->getMosaic()->printMosaicByRow(5, type) << "\t%\t" << player4->getMosaic()->printMosaicByRow(5, type) << endl;
-        cout << player1->getFloor()->printFloor(type) << "\t\t%\t" << player2->getFloor()->printFloor(type) << "\t\t%\t" 
-             << player3->getFloor()->printFloor(type) << "\t\t%\t" << player4->getFloor()->printFloor(type) << endl;
-
-    }
-
-}
-
 bool Game::checkValidInput(char factorySelection, char colourSelection, char placeLocation, Player* player, char placeRemaining) {
 
     bool validInput = false;
@@ -956,9 +706,8 @@ bool Game::checkValidInput(char factorySelection, char colourSelection, char pla
             if(colourSelection == CRED  || colourSelection == CYELLOW || colourSelection == CDARK_BLUE 
                 || colourSelection == CLIGHT_BLUE || colourSelection == CBLACK) {
 
-
                     if (checkForColour(factorySelection, colourSelection)) { 
-                    
+                        
                         if (placeRemaining == 'A' || placeRemaining == 'Z') {
 
                             if (placeLocation == '1' || placeLocation == '2' || placeLocation == '3' 
@@ -966,7 +715,7 @@ bool Game::checkValidInput(char factorySelection, char colourSelection, char pla
 
                                 validInput = player->getMosaic()->validateStorageMove(colourSelection, placeLocation);
 
-                            } else if (placeLocation == '6') {
+                            } else if (placeLocation == '7') {
                                 validInput = true;
 
                             } else {
@@ -1022,7 +771,7 @@ bool Game::checkForColour(char factorySelection, char colourSelection) {
         exists = true;
     }
 
-    if (factory00 != nullptr && factorySelection == 'B'  && factory00->validateFactory(colourSelection)) {
+    if (factory00 != nullptr && factorySelection == 'Z'  && factory00->validateFactory(colourSelection)) {
         exists = true;
     }
 
@@ -1156,7 +905,7 @@ void Game::alternateTurn() {
 
 }
 
-/*------ Saving and loading functions ------*/
+/*------ Saving/loading and validating functions ------*/
 bool Game::saveGame(string filename) {
 
     bool saved = true;
@@ -1178,6 +927,7 @@ bool Game::saveGame(string filename) {
         } else if (player4 != nullptr && player4->getTurn()) {
             outfile << "4" << endl;
         }
+
         // P1 details
         outfile << player1->getName() << endl;
         outfile << player1->getScore() << endl;
@@ -1188,7 +938,6 @@ bool Game::saveGame(string filename) {
         if (player3 != nullptr) {
             outfile << player3->getName() << endl;
             outfile << player3->getScore() << endl;
-            
         } else {
             outfile << endl;
             outfile << endl;
@@ -1197,7 +946,6 @@ bool Game::saveGame(string filename) {
         if (player4 != nullptr) {
             outfile << player4->getName() << endl;
             outfile << player4->getScore() << endl;
-            
         } else {
             outfile << endl;
             outfile << endl;
@@ -1210,10 +958,8 @@ bool Game::saveGame(string filename) {
         outfile << factory0->printFactory() << endl;
         if (factory00 != nullptr) {
             outfile << factory00->printFactory() << endl;
-
         } else {
             outfile << endl;
-
         }
 
         // Factories 1-5
@@ -1226,21 +972,17 @@ bool Game::saveGame(string filename) {
         if (factory6 != nullptr) {
             outfile << factory6->printFactory() << endl;
             outfile << factory7->printFactory() << endl;
-
         } else {
             outfile << endl;
             outfile << endl;
-
         }
         // Factories 8-9
         if (factory8 != nullptr) {
             outfile << factory8->printFactory() << endl;
             outfile << factory9->printFactory() << endl;
-
         } else {
             outfile << endl;
             outfile << endl;
-
         }
 
         // P1 Storage
@@ -1254,7 +996,7 @@ bool Game::saveGame(string filename) {
         // P1 Mosaic wall
         outfile << player1->getMosaic()->getCompletedTiles(false) << endl;
 
-        // P2 Mosaic
+        // P2 Storage
         outfile << player2->getMosaic()->getStorage1(false, type) << endl;
         outfile << player2->getMosaic()->getStorage2(false, type) << endl;
         outfile << player2->getMosaic()->getStorage3(false, type) << endl;
@@ -1265,7 +1007,7 @@ bool Game::saveGame(string filename) {
         // P2 Mosaic wall
         outfile << player2->getMosaic()->getCompletedTiles(false) << endl;
 
-        // P3
+        // P3 Storage
         if (player3 != nullptr) {
             // P3 Mosaic
             outfile << player3->getMosaic()->getStorage1(false, type) << endl;
@@ -1282,10 +1024,9 @@ bool Game::saveGame(string filename) {
             for (int i = 0; i < 7; ++i) {
                 outfile << endl;
             }
-
         }
 
-        // P4
+        // P4 Storage
         if (player4 != nullptr) {
             // P4 Mosaic
             outfile << player4->getMosaic()->getStorage1(false, type) << endl;
@@ -1302,7 +1043,6 @@ bool Game::saveGame(string filename) {
             for (int i = 0; i < 7; ++i) {
                 outfile << endl;
             }
-
         }
 
         // boxLid
@@ -1324,7 +1064,7 @@ bool Game::saveGame(string filename) {
         
         outfile.close();
 
-    } catch (std::ofstream::failure e) {
+    } catch (std::ofstream::failure& e) {
         saved = false;
     }
 
@@ -1395,41 +1135,36 @@ void Game::initializeObjectsFromArray(std::string LOADED_GAME_FILE) {
     numPlayers = stoi(LOADED_NUMPLAYERS);
     numFactories = stoi(LOADED_NUMFACTORIES);
 
-    // Load turn
-    bool p1Turn = false;
-    bool p2Turn = false;
-    bool p3Turn = false;
-    bool p4Turn = false;
-
-    if (LOADED_TURN == "1") {
-        p1Turn = true;
-    } else if (LOADED_TURN == "2") {
-        p2Turn = true;
-    } else if (LOADED_TURN == "3") {
-        p3Turn = true;
-    } else if (LOADED_TURN == "4") {
-        p4Turn = true;
-    }
-
-
     // Load mosaics for players
     string p1storage[6] = {LOADED_P1_WALL_1, LOADED_P1_WALL_2, LOADED_P1_WALL_3, LOADED_P1_WALL_4, LOADED_P1_WALL_5, LOADED_P1_MOSAIC};
     string p2storage[6] = {LOADED_P2_WALL_1, LOADED_P2_WALL_2, LOADED_P2_WALL_3, LOADED_P2_WALL_4, LOADED_P2_WALL_5, LOADED_P2_MOSAIC};
+    
     // Load player details
-    player1 = new Player(LOADED_P1_NAME, std::stoi(LOADED_P1_SCORE), p1Turn, LOADED_P1_FLOOR, p1storage);
-    player2 = new Player(LOADED_P2_NAME, std::stoi(LOADED_P2_SCORE), p2Turn, LOADED_P2_FLOOR, p2storage);
+    player1 = new Player(LOADED_P1_NAME, std::stoi(LOADED_P1_SCORE), LOADED_P1_FLOOR, p1storage);
+    player2 = new Player(LOADED_P2_NAME, std::stoi(LOADED_P2_SCORE), LOADED_P2_FLOOR, p2storage);
     player3 = nullptr;
     player4 = nullptr;
 
     if (numPlayers == 3 || numPlayers == 4) {
         string p3storage[6] = {LOADED_P3_WALL_1, LOADED_P3_WALL_2, LOADED_P3_WALL_3, LOADED_P3_WALL_4, LOADED_P3_WALL_5, LOADED_P3_MOSAIC};
-        player3 = new Player(LOADED_P3_NAME, std::stoi(LOADED_P3_SCORE), p3Turn, LOADED_P3_FLOOR, p3storage);
+        player3 = new Player(LOADED_P3_NAME, std::stoi(LOADED_P3_SCORE), LOADED_P3_FLOOR, p3storage);
 
     }
+
     if (numPlayers == 4) {
         string p4storage[6] = {LOADED_P4_WALL_1, LOADED_P4_WALL_2, LOADED_P4_WALL_3, LOADED_P4_WALL_4, LOADED_P4_WALL_5, LOADED_P4_MOSAIC};
-        player4 = new Player(LOADED_P4_NAME, std::stoi(LOADED_P4_SCORE), p4Turn, LOADED_P4_FLOOR, p4storage);
+        player4 = new Player(LOADED_P4_NAME, std::stoi(LOADED_P4_SCORE), LOADED_P4_FLOOR, p4storage);
 
+    }
+
+    if (LOADED_TURN == "1") {
+        player1->setTurn(true);
+    } else if (LOADED_TURN == "2") {
+        player2->setTurn(true);
+    } else if (LOADED_TURN == "3") {
+        player3->setTurn(true);
+    } else if (LOADED_TURN == "4") {
+        player4->setTurn(true);
     }
     
     // Load factories 0-00
@@ -1457,7 +1192,6 @@ void Game::initializeObjectsFromArray(std::string LOADED_GAME_FILE) {
         factory8 = new FactoryArray(LOADED_FACTORY_8);
         factory9 = new FactoryArray(LOADED_FACTORY_9);
     }
-    
 
     // Load boxLid
     if (LOADED_LID == "") {
@@ -1466,7 +1200,6 @@ void Game::initializeObjectsFromArray(std::string LOADED_GAME_FILE) {
     } else {
         boxLid = new TileBag(LOADED_LID);
     }
-
 
 }
 
@@ -2034,6 +1767,198 @@ bool Game::checkAllCharsAreNums(string str) {
 }
 
 /*------ Printing info functions ------*/
+
+void Game::printEndRoundMsg() {
+
+    cout << endl;
+    cout << "--- After score calculation ---" << endl;
+    cout << "Points scored this round:" << endl;
+    cout << "Player " << player1->getName() << ": " << p1RoundScore << endl;
+    cout << "Player " << player2->getName() << ": " << p2RoundScore << endl;
+    if (player3 != nullptr) {
+        cout << "Player " << player3->getName() << ": " << p3RoundScore << endl;
+    }
+    if (player4 != nullptr) {
+        cout << "Player " << player4->getName() << ": " << p4RoundScore << endl;
+    }
+    cout << endl;
+
+    // Print out total player scores
+    cout << "Total scores:" << endl;
+    cout << "Player " << player1->getName() << "'s score: " << player1->getScore() << endl;
+    cout << "Player " << player2->getName() << "'s score: " << player2->getScore() << endl;
+    if (player3 != nullptr) {
+        cout << "Player " << player3->getName() << "'s score: " << player3->getScore() << endl;
+    }
+    if (player4 != nullptr) {
+        cout << "Player " << player4->getName() << "'s score: " << player4->getScore() << endl;
+    }
+    cout << endl;
+
+    // Print moves taken in round
+    cout << "< The following turns took place >" << endl;
+    for (string output : roundInformation) {
+        cout << output << endl;
+
+    }
+    lastRoundInformation = roundInformation;
+    roundInformation.clear();
+
+    cout << endl;
+    cout << "=== END OF ROUND ===" << endl;
+    cout << "Press ENTER to continue.." << endl;
+    std::cin.get();
+
+}
+
+void Game::printEndGameMsg() {
+
+    cout << endl;
+    cout << "==== GAME OVER! ====" << endl;
+    cout << endl;
+
+    // Display winner message
+
+    if (player4 != nullptr) {
+        if (player1->getScore() > player2->getScore() && player1->getScore() > player3->getScore() && player1->getScore() > player4->getScore()) {
+            cout << "Player " << player1->getName() << " wins!" << endl;
+            cout << endl;
+
+        } else if (player2->getScore() > player1->getScore() && player2->getScore() > player3->getScore() && player2->getScore() > player4->getScore()) {
+            cout << "Player " << player2->getName() << " wins!" << endl;
+            cout << endl;
+
+        } else if (player3->getScore() > player1->getScore() && player3->getScore() > player2->getScore() && player3->getScore() > player4->getScore()) {
+            cout << "Player " << player3->getName() << " wins!" << endl;
+            cout << endl;
+
+        } else if (player4->getScore() > player1->getScore() && player4->getScore() > player2->getScore() && player4->getScore() > player3->getScore()) {
+            cout << "Player " << player4->getName() << " wins!" << endl;
+            cout << endl;
+
+        }
+
+    } else if (player3 != nullptr) {
+        if (player1->getScore() > player2->getScore() && player1->getScore() > player3->getScore()) {
+            cout << "Player " << player1->getName() << " wins!" << endl;
+            cout << endl;
+
+        } else if (player2->getScore() > player1->getScore() && player2->getScore() > player3->getScore()) {
+            cout << "Player " << player2->getName() << " wins!" << endl;
+            cout << endl;
+
+        } else if (player3->getScore() > player1->getScore() && player3->getScore() > player2->getScore()) {
+            cout << "Player " << player3->getName() << " wins!" << endl;
+            cout << endl;
+
+        }
+
+    } else {
+        if (player1->getScore() > player2->getScore() ) {
+            cout << "Player " << player1->getName() << " wins!" << endl;
+            cout << endl;
+
+        } else if (numPlayers == 2 && player2->getScore() > player1->getScore()) {
+            cout << "Player " << player2->getName() << " wins!" << endl;
+            cout << endl;
+
+        } else {
+            cout << "Draw game!" << endl;
+            cout << endl;
+        }
+
+    }
+
+
+    cout << "Final Scores:" << endl;
+    cout << "Player " << player1->getName() << " Score:" << player1->getScore() << endl;
+    cout << "Player " << player2->getName() << " Score:" << player2->getScore() << endl;
+    if (player3 != nullptr) {
+        cout << "Player " << player3->getName() << " Score:" << player3->getScore() << endl;
+
+    }
+    if (player4 != nullptr) {
+        cout << "Player " << player4->getName() << " Score:" << player4->getScore() << endl;
+
+    }
+    cout << endl;
+    cout << "Thank you for playing!" << endl;
+    cout << "Returning to main menu!" << endl;
+    cout << "Press ENTER to continue.." << endl;
+    std::cin.get();
+    cout << endl;
+
+}
+
+void Game::printFactories() {
+    cout << "Factories:" << std::endl;
+    cout << "A: " << factory0->printFactoryToBoard(type) << endl;
+    if (factory00 != nullptr) {
+        cout << "Z: " << factory00->printFactoryToBoard(type) << endl;
+    }
+
+    cout << "1: " << factory1->printFactoryToBoard(type) << endl;
+    cout << "2: " << factory2->printFactoryToBoard(type) << endl;
+    cout << "3: " << factory3->printFactoryToBoard(type) << endl;
+    cout << "4: " << factory4->printFactoryToBoard(type) << endl;
+    cout << "5: " << factory5->printFactoryToBoard(type) << endl;
+    if (factory6 != nullptr) {
+        cout << "6: " << factory6->printFactoryToBoard(type) << endl;
+        cout << "7: " << factory7->printFactoryToBoard(type) << endl;
+    }
+    if (factory8 != nullptr) {
+        cout << "8: " << factory8->printFactoryToBoard(type) << endl;
+        cout << "9: " << factory9->printFactoryToBoard(type) << endl;
+    }
+    cout << std::endl;
+
+}
+
+void Game::printMosaicAll(Player* player1, Player* player2, Player* player3, Player* player4) {
+
+    if (player3 == nullptr && player4 == nullptr) {
+        printf("%s%-20s%-8s%s%s%s", "Mosiac for: ", player1->getName().c_str(), "%", "Mosaic for: ", player2->getName().c_str(), "\n");
+        cout << player1->getMosaic()->printMosaicByRow(1, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(1, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(2, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(2, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(3, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(3, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(4, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(4, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(5, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(5, type) << endl;
+        cout << player1->getFloor()->printFloor(type) << "\t\t%\t" << player2->getFloor()->printFloor(type) << endl;
+
+    } else if (player3 != nullptr && player4 == nullptr) {
+        printf("%s%-20s%-8s%s%-20s%-8s%s%s%s", "Mosiac for: ", player1->getName().c_str(), "%", "Mosaic for: ", 
+                player2->getName().c_str(), "%", "Mosaic for: ", player3->getName().c_str(), "\n");
+        cout << player1->getMosaic()->printMosaicByRow(1, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(1, type) 
+             << "\t%\t" << player3->getMosaic()->printMosaicByRow(1, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(2, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(2, type) 
+             << "\t%\t" << player3->getMosaic()->printMosaicByRow(2, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(3, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(3, type) 
+             << "\t%\t" << player3->getMosaic()->printMosaicByRow(3, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(4, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(4, type) 
+             << "\t%\t" << player3->getMosaic()->printMosaicByRow(4, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(5, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(5, type)
+             << "\t%\t" << player3->getMosaic()->printMosaicByRow(5, type) << endl;
+        cout << player1->getFloor()->printFloor(type) << "\t\t%\t" << player2->getFloor()->printFloor(type) << "\t\t%\t" << player3->getFloor()->printFloor(type) << endl;
+
+    } else {
+        printf("%s%-20s%-8s%s%-20s%-8s%s%-20s%-8s%s%s%s", "Mosiac for: ", player1->getName().c_str(), "%", "Mosaic for: ", 
+                player2->getName().c_str(), "%", "Mosaic for: ", player3->getName().c_str(), "%", "Mosaic for: ", player4->getName().c_str(), "\n");
+        cout << player1->getMosaic()->printMosaicByRow(1, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(1, type) 
+             << "\t%\t" << player3->getMosaic()->printMosaicByRow(1, type) << "\t%\t" << player4->getMosaic()->printMosaicByRow(1, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(2, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(2, type)
+             << "\t%\t" << player3->getMosaic()->printMosaicByRow(2, type) << "\t%\t" << player4->getMosaic()->printMosaicByRow(2, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(3, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(3, type)
+             << "\t%\t" << player3->getMosaic()->printMosaicByRow(3, type) << "\t%\t" << player4->getMosaic()->printMosaicByRow(3, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(4, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(4, type)
+             << "\t%\t" << player3->getMosaic()->printMosaicByRow(4, type) << "\t%\t" << player4->getMosaic()->printMosaicByRow(4, type) << endl;
+        cout << player1->getMosaic()->printMosaicByRow(5, type) << "\t%\t" << player2->getMosaic()->printMosaicByRow(5, type)
+             << "\t%\t" << player3->getMosaic()->printMosaicByRow(5, type) << "\t%\t" << player4->getMosaic()->printMosaicByRow(5, type) << endl;
+        cout << player1->getFloor()->printFloor(type) << "\t\t%\t" << player2->getFloor()->printFloor(type) << "\t\t%\t" 
+             << player3->getFloor()->printFloor(type) << "\t\t%\t" << player4->getFloor()->printFloor(type) << endl;
+
+    }
+
+}
 
 void Game::printOther() {
 

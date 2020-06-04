@@ -17,11 +17,10 @@ public:
      * Constructor for loading a saved game with information pertaining to player
      * @param name string of saved player's name
      * @param score int of player's saved score
-     * @param turn bool of whether it is player's turn
      * @param savedFloor string with list of tiles in player's floor
      * @param savedMosaic string array of player's mosaic tiles
     */
-    Player(string name, int score, bool turn, string savedFloor, string savedMosaic[]);
+    Player(string name, int score, string savedFloor, string savedMosaic[]);
 
     ~Player();
 
