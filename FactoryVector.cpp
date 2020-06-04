@@ -156,9 +156,10 @@ Tile* FactoryVector::drawFTile() {
 bool FactoryVector::findFTile() {
 
     bool found = false;
-
-    if (tiles[0] != nullptr && tiles[0]->getColour() == FIRST_PLAYER) {
-        found =  true;
+    if (tiles.size() != 0) {
+        if (tiles[0] != nullptr && tiles[0]->getColour() == FIRST_PLAYER) {
+            found =  true;
+        }
     }
 
     return found;

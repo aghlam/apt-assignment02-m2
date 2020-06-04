@@ -248,6 +248,8 @@ private:
 
     void printEndRoundMsg();
 
+    void printFactories();
+
 
     // Variables
     // Players and scoring

@@ -149,7 +149,7 @@ bool FactoryArray::validateFactory(char colourSelection) {
 
     if (length != 0) {
         for (Tile* tile : tiles) {
-            if (tile->printTile() == colourSelection) {
+            if (tile != nullptr && tile->printTile() == colourSelection) {
                 validFactory = true;
             }
         }
