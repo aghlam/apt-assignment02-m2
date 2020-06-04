@@ -51,6 +51,8 @@ public:
 
     /**
      * For printing the factory to game board. Includes spaces in between each tile
+     * Can print letters or symbols depending on type included
+     * @param type string of the type to be printed
      * @return string of tiles with spaces in array
     */
     string printFactoryToBoard(std::string type);

@@ -28,8 +28,13 @@ public:
      * requried for a new game.
      * @param player1Name string of player's name
      * @param player2Name string of player's name
+     * @param player3Name string of player's name
+     * @param player4Name string of player's name
+     * @param numPlayers int number of players participating
+     * @param numFactories int number of center factories to use
      * @param seed bool of whether a seed is used
      * @param intSeed int number of seed used
+     * @param type string type of display to use
     */
     Game(string player1Name, string player2Name, string player3Name, string player4name, int numPlayers, int numFactories, bool seed, int intSeed, string type);
 
@@ -50,6 +55,7 @@ public:
      * - Calculates scores of each round
      * - Prints out player choices and round information
      * - Tally final scores at gameplay end and declares winner
+     * - Does checks for end of round and end of game
     */
     void start();
 
@@ -105,9 +111,8 @@ private:
     /**
      * Players can either save the game or input commands to continue gameplay.
      * It takes inputs from the players and calls other methods to help validate
-     * and process the inputs. Inputs for factory0 is coded in here since its 
-     * functions are slightly different to the other factories. Small info messages
-     * are printed out when an input does not pass the validation check.
+     * and process the inputs. Small info messages and other help functions
+     * can be called and printed out with input
      * @param player the player who is taking the turn
     */
     void playTurn(Player* player);
@@ -120,10 +125,26 @@ private:
      * @param colourSelection char referring to the selected colour
      * @param placeLocation char referring to the location tile is to be placed
      * @param player player taking the turn
+     * @param placeRemaining char referring to the center factory remaining tiles go to
      * @return true if inputs pass all validations
     */
     bool checkValidInput(char factorySelection, char colourSelection, char placeLocation, Player* player, char placeRemaining);
     
+    /**
+     * Method to help check if the selected colour exists in the selected factory
+     * @param factorySelection char referring to the selected factory
+     * @param colourSelection char referring to the selected colour
+     * @return true if colour exists in factory
+    */
+    bool checkForColour(char factorySelection, char colourSelection);
+
+    /**
+     * Method to help validate if factory input char is valid
+     * @param factorySelection char referring to the selected factory
+     * @return true if factory selected is a valid factory
+    */
+    bool checkFactory(char factorySelection);
+
     /**
      * Enacts the inputs done by player for factories 1-5. Attempts the place the selected tiles 
      * from the factory into mosaic. If it does not fit into mosaic, it ends up on the floor. If 
@@ -132,9 +153,20 @@ private:
      * @param factory factory of the selected factory
      * @param colourSelection char referring to the selected colour
      * @param placeLocation char referring to the location tile is to be placed
+     * @param placeRemaining char referring to the center factory remaining tiles go to
     */
     void playChoices(Player* player, FactoryArray* factory, char colourSelection, char placeLocation, char placeRemaining);
     
+    /**
+     * Same as the above playChoices method but does not have the placeRemaining param as
+     * this is taking tiles from the center factories itself
+     * @param player player taking the turn
+     * @param factory factory of the selected factory
+     * @param colourSelection char referring to the selected colour
+     * @param placeLocation char referring to the location tile is to be placed
+    */
+    void playChoicesCenter(Player* player, FactoryVector* factory, char colourSelection, char placeLocation);
+
     /**
      * Checks who took the turn and alternates between the players
     */
@@ -156,7 +188,7 @@ private:
 
     /**
      * Validates the factory
-     * @param str string details of row in factory 1 to/or 5
+     * @param str string details of row in factory 1 to/or 9
      * @return true if the row is valid
     */
     bool validateFactory1to9(string str);
@@ -225,32 +257,55 @@ private:
     bool checkAllCharsAreNums(string str);
 
     /**
+     * Prints out information for end of round such as points scored in 
+     * current round, and moves taken by each player in the round
+    */
+    void printEndRoundMsg();
+
+    /**
+     * Prints the winner and the final scores and end of the game
+    */
+    void printEndGameMsg();
+
+    /**
+     * Displays teh factories according to the display type
+    */
+    void printFactories();
+
+    /**
+     * Prints all player mosaics in a viewable display. Will only print the 
+     * mosaics of the players participating
+     * @param player1 the player to be printed
+     * @param player2 the player to be printed
+     * @param player3 the player to be printed
+     * @param player4 the player to be printed
+    */
+    void printMosaicAll(Player* player1, Player* player2, Player* player3, Player* player4);
+
+    /**
+     * Displays information of the available inputs
+    */
+    void printOther();
+
+    /**
+     * Displays information on how to play game
+    */
+    void printHelp();
+    
+    /**
+     * Displays the moves taken in the last round
+    */
+    void printLastRound();
+
+    /**
+     * Displays the moves that have been taken in current round
+    */
+    void printCurrentRound();
+
+    /**
      * Prints out relative information after loading a save file
     */
     void printLoadInfo();
-
-    // New functions
-    void playChoicesCenter(Player* player, FactoryVector* factory, char colourSelection, char placeLocation);
-
-    void printMosaicAll(Player* player1, Player* player2, Player* player3, Player* player4);
-
-    void printOther();
-    
-    void printHelp();
-
-    void printLastRound();
-
-    bool checkFactory(char factorySelection);
-
-    bool checkForColour(char factorySelection, char colourSelection);
-
-    void printEndGameMsg();
-
-    void printEndRoundMsg();
-
-    void printFactories();
-
-    void printCurrentRound();
 
 
     // Variables
@@ -264,27 +319,28 @@ private:
     bool seed;
     int intSeed;
 
+    // Game mode variables
     int numPlayers;
     int numFactories;
 
     // Display type
     string type;
 
+    // Round scores
     int p1RoundScore;
     int p2RoundScore;
     int p3RoundScore;
     int p4RoundScore;
 
-
     // tileBag and boxLid
     TileBag* tileBag;
     TileBag* boxLid;
 
-    // Factories - factory0 is the middle
+    // Factories - factory0-00
     FactoryVector* factory0;
     FactoryVector* factory00;
 
-    //
+    // Factories - 1-9
     FactoryArray* factory1;
     FactoryArray* factory2;
     FactoryArray* factory3;

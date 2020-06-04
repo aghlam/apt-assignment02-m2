@@ -910,6 +910,7 @@ void Game::alternateTurn() {
 }
 
 /*------ Saving/loading and validating functions ------*/
+
 bool Game::saveGame(string filename) {
 
     bool saved = true;
@@ -1684,7 +1685,7 @@ bool Game::validateUpper(string str) {
 
     return success;
 }
-//for factory0 and floor
+
 bool Game::validateUpperPlusF(string str) {
 
     bool success = true;

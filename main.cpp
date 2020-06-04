@@ -35,12 +35,24 @@ void printCredits();
 */
 void printSeedMenu();
 
+/**
+ * Prints help and instructions menu
+*/
 void printHelpMenu();
 
+/**
+ * Prompts the user for which type of display the user would like
+*/
 std::string promptType();
 
+/**
+ * Prompts user to input number of players to participate
+*/
 int promptNumPlayers();
 
+/**
+ * Prompts user to input number of factories to be used
+*/
 int promptNumFactories();
 
 
@@ -590,10 +602,10 @@ void printSeedMenu() {
 }
 
 void printHelpMenu() {
+
     cout << endl;
     cout << "== GAME INSTRUCTIONS ==" << endl;
     cout << endl;
-
     cout << "- Players and Factories:" << endl;
     cout << "  This version of Azul allows between 2-4 players to play the game." << endl;
     cout << "  The number of factories available will differ with the number of people playing:" << endl;

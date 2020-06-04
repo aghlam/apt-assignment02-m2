@@ -41,6 +41,7 @@ public:
 
     /**
      * @param index of tile to retrieve from vector
+     * @return tile at input index
     */
     Tile* getTile(unsigned int index);
     
@@ -51,7 +52,21 @@ public:
     string printFactory();
 
     /**
+     * Given there is an F tile, it will return the F tile
+     * @return tile of the F tile
+    */
+    Tile* drawFTile();
+
+    /**
+     * Checks to see if the F is still in the factory
+     * @return true if F tile exists
+    */
+    bool findFTile();
+
+    /**
      * For printing the factory to game board. Includes spaces in between each tile
+     * Prints symbols or letters depending on input type
+     * @param type string of the display to print
      * @return string of tiles with spaces in array
     */
     string printFactoryToBoard(std::string type);
@@ -79,9 +94,7 @@ public:
     */
     void insertionSortFactory();
 
-    Tile* drawFTile();
-
-    bool findFTile();
+    
 
 
 private:

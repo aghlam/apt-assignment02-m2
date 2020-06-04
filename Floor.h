@@ -60,6 +60,8 @@ public:
 
     /**
      * Prints the tiles to the game board with '.' representing no tiles
+     * Prints tiles of letters or symbols
+     * @param type string of the display to show
      * @return string of tiles in floor array
     */
     std::string printFloor(std::string type);

@@ -36,7 +36,12 @@ public:
     */
     char printTile();
 
-
+    /**
+     * An alternative to dispaly the tile in actual colour!
+     * Can print in symbols or letters
+     * @param type the display type of the tile
+     * @return char representation of the colour in colour!
+    */
     std::string printColourTile(std::string type);
 
 

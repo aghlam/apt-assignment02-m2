@@ -77,7 +77,7 @@ Tile* FactoryVector::getTile(unsigned int index) {
     return tilePtr;
 }
 
-string FactoryVector::printFactory(){
+string FactoryVector::printFactory() {
     
     string output = "";
 

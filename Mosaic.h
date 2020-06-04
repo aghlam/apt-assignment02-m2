@@ -90,6 +90,7 @@ public:
 
     /**
      * Gives save-file string of the mosaic storage rows
+     * @param type string of the display type
      * @return string of all storage rows in save-file format
     */
     std::string getAllStorage(std::string type);
@@ -98,6 +99,7 @@ public:
     /**
      * Gives human-readable or save-file string of first row storage
      * @param isSpaced bool; if the resulting string is to have spaces between characters or not
+     * @param type string of the display type
      * @return string of first row storage in save-file or human-readable format
     */
     std::string getStorage1(bool isSpaced, std::string type);
@@ -105,6 +107,7 @@ public:
     /**
      * Gives human-readable or save-file string of second row storage
      * @param isSpaced bool; if the resulting string is to have spaces between characters or not
+     * @param type string of the display type
      * @return string of second row storage in save-file or human-readable format
     */
     std::string getStorage2(bool isSpaced, std::string type);
@@ -112,6 +115,7 @@ public:
     /**
      * Gives human-readable or save-file string of third row storage
      * @param isSpaced bool; if the resulting string is to have spaces between characters or not
+     * @param type string of the display type
      * @return string of third row storage in save-file or human-readable format
     */
     std::string getStorage3(bool isSpaced, std::string type);
@@ -119,6 +123,7 @@ public:
     /**
      * Gives human-readable or save-file string of fourth row storage
      * @param isSpaced bool; if the resulting string is to have spaces between characters or not
+     * @param type string of the display type
      * @return string of fourth row storage in save-file or human-readable format
     */
     std::string getStorage4(bool isSpaced, std::string type);
@@ -126,21 +131,31 @@ public:
     /**
      * Gives human-readable or save-file string of fifth row storage
      * @param isSpaced bool; if the resulting string is to have spaces between characters or not
+     * @param type string of the display type
      * @return string of fifth row storage in save-file or human-readable format
     */
     std::string getStorage5(bool isSpaced, std::string type);
 
     /**
      * Prints out human-readable format of all storage rows + completed grid for the player
+     * @param type string of the display type
      * @return string of a player's mosaic summary, all in human-readable format
     */
     std::string printMosaic(std::string type);
 
+    /**
+     * An alternative for printing and is useful to printing out multiple mosaics
+     * Prints the row of both storage and completed sides of the mosaic
+     * @param row int of the row to print
+     * @param type string of the display to be printed
+     * @return string representation of the mosaic row
+    */
     std::string printMosaicByRow(int row, std::string type);
 
     /**
      * Updates the 2D array used for printing with the appropriate colour representation for
      * tiles in the array.
+     * @param type string of the display type
     */
     void updateColourArray(std::string type);
 
