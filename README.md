@@ -4,7 +4,6 @@
 Milestone#2 of Advanced Programming Techniques Assignment02
 
 ## Authors
-Milestone #2  
 - Alan Lam 		s3436174  
 
 ## Game Commands
@@ -29,11 +28,3 @@ and does require need the .txt extension entered when entering a file name.
 ### Exiting a game
 To exit game at any time during game play, press:  
 ctrl + D
-
-## Enhancements To the Game
-
-### Minor Enhancements
-- Make tiles show their colour but leave mosaic colourless lowercase because its easier to identify what has been moved
-- Print both mosaics side-by-side to see what opponents have
-
-### Major Enhancements
