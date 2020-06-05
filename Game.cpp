@@ -183,11 +183,11 @@ void Game::start() {
             } else if (player4 != nullptr && player4->getTurn()) {
                 playTurn(player4);
             }
-
+            
             round = checkRoundEnd();
             
         } // End round loop
-
+        
         // After round functions
         // Set next player first turn
         setFirstTurnPlayer();
@@ -496,7 +496,9 @@ void Game::playTurn(Player* player) {
     // Sort factory0-00 before printing
     factory0->insertionSortFactory();
     if (factory00 != nullptr) {
-        factory00->insertionSortFactory();
+        if(factory00->getLength() != 0) {
+            factory00->insertionSortFactory();
+        }
     }
 
     cout << "TURN FOR PLAYER: " << player->getName() << endl;
@@ -840,11 +842,9 @@ void Game::playChoices(Player* player, FactoryArray* factory, char colourSelecti
         } else {
             if (player->getFloor()->isFloorFull()) {
                 boxLid->addTile(tile);
-                cout << "added to boxLid" << endl;
 
             } else {
                 player->getFloor()->addToFloor(tile);
-                cout << "added to floor" << endl;
             }
         }
     } 

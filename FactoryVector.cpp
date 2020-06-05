@@ -31,7 +31,7 @@ FactoryVector::FactoryVector(std::string savedFactory) {
 }
 
 FactoryVector::~FactoryVector() {
-    for (unsigned int i = 0; i < tiles.size(); i++) {
+    for (unsigned int i = 0; i < tiles.size(); ++i) {
         if(tiles[i] != nullptr) {
             delete tiles[i];
             tiles[i] = nullptr;
@@ -148,6 +148,7 @@ Tile* FactoryVector::drawFTile() {
     if (tiles[0]->getColour() == FIRST_PLAYER) {
         tile = tiles[0];
         tiles[0] = nullptr;
+        tiles.erase(tiles.begin());
     }
 
     return tile;
