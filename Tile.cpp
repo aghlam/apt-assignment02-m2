@@ -106,7 +106,5 @@ std::string Tile::printColourTile(std::string type) {
 
     }
 
-
-
     return tileOutput;
 }

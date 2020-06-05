@@ -137,13 +137,6 @@ public:
     std::string getStorage5(bool isSpaced, std::string type);
 
     /**
-     * Prints out human-readable format of all storage rows + completed grid for the player
-     * @param type string of the display type
-     * @return string of a player's mosaic summary, all in human-readable format
-    */
-    std::string printMosaic(std::string type);
-
-    /**
      * An alternative for printing and is useful to printing out multiple mosaics
      * Prints the row of both storage and completed sides of the mosaic
      * @param row int of the row to print

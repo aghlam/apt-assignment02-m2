@@ -1841,6 +1841,9 @@ void Game::printEndGameMsg() {
             cout << "Player " << player4->getName() << " wins!" << endl;
             cout << endl;
 
+        } else {
+            cout << "Draw Game!" << endl;
+            cout << endl;
         }
 
     } else if (player3 != nullptr) {
@@ -1856,6 +1859,9 @@ void Game::printEndGameMsg() {
             cout << "Player " << player3->getName() << " wins!" << endl;
             cout << endl;
 
+        } else {
+            cout << "Draw Game!" << endl;
+            cout << endl;
         }
 
     } else {
@@ -2057,6 +2063,7 @@ void Game::printLastRound() {
 }
 
 void Game::printCurrentRound() {
+    
     if (roundInformation.size() != 0) {
         cout << endl;
         cout << "== Current round moves taken ==" << endl;
@@ -2075,6 +2082,7 @@ void Game::printCurrentRound() {
     cout << "Press ENTER to continue.." << endl;
     std::cin.get();
     cout << endl;
+
 }
 
 void Game::printLoadInfo() {
@@ -2114,4 +2122,5 @@ void Game::printLoadInfo() {
         cout << "Continuing game.." << endl;
         cout << endl;
     }
+
 }

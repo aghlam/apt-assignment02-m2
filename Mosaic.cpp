@@ -757,25 +757,6 @@ std::string Mosaic::getStorage5(bool isSpaced, std::string type) {
     return storage5Str;
 }
 
-std::string Mosaic::printMosaic(std::string type) {
-
-    // std::string completedGridStr = getCompletedTiles(true);
-
-    std::string row1 = getColourArrayRow(1);
-    std::string row2 = getColourArrayRow(2);
-    std::string row3 = getColourArrayRow(3);
-    std::string row4 = getColourArrayRow(4);
-    std::string row5 = getColourArrayRow(5);
-
-    std::string mosaicString = STORAGE1 + getStorage1(true, type) + " " + BARRIER + " " + row1 + '\n'
-                             + STORAGE2 + getStorage2(true, type) + BARRIER + " " + row2 + '\n'
-                             + STORAGE3 + getStorage3(true, type) + BARRIER + " " + row3 + '\n'
-                             + STORAGE4 + getStorage4(true, type) + BARRIER + " " + row4 + '\n'
-                             + STORAGE5 + getStorage5(true, type) + BARRIER + " " + row5 + '\n';
-
-    return mosaicString;
-}
-
 std::string Mosaic::printMosaicByRow(int row, std::string type) {
 
     std::string mosaicString = "";
